@@ -2,8 +2,7 @@
 .contentRoot {
     width: 100%;
     height: 100%;
-    position: relative;
-    overflow: hidden;
+  
   }
   
   .map {
@@ -13,8 +12,8 @@
   }
   
 .ol-zoom {
-    bottom: unset;
-    top: 20px;
+    bottom: 40px;
+    top: unset;
     left: unset;
     right: 8px;
   }
@@ -165,7 +164,7 @@
 
 .embed-floating-button {
   position: absolute;
-  top: 20px;
+  bottom: 20px;
   left: 20px;
   width: 230px;
   background-color: white;
@@ -181,7 +180,7 @@
 
 .layer-select-embed {
   position: absolute;
-  top: 20px;
+  bottom: 20px;
   left: 20px;
   background-color: white;
   border: 1px solid #000;
@@ -254,9 +253,60 @@
   width: 55px;
 }
 
+.draw-box-button {
+  border: 0.2px solid #000;
+  position: absolute;
+  top: 20px;
+  right: 8px;
+  display: block;
+  margin: 1px;
+  padding: 0;
+  color: var(--ol-subtle-foreground-color);
+  font-weight: bold;
+  text-decoration: none;
+  font-size: inherit;
+  text-align: center;
+  height: 2em;
+  width: 8em;
+  line-height: 0.4em;
+  background-color: var(--ol-background-color);
+  border: none;
+  border-radius: 2px;
+}
+
+.draw-box-button .img {
+  font-size: 16px;
+}
+.draw-box-button:hover {
+  background-color: #eeeeee;
+  border: 0.5px solid #000;
+}
+
+
+.delete-button {
+  border: 0.2px solid #000;
+  position: absolute;
+  bottom: 140px;
+  right: 8px;
+  display: block;
+  margin: 1px;
+  padding: 0;
+  color: var(--ol-subtle-foreground-color);
+  font-weight: bold;
+  text-decoration: none;
+  font-size: inherit;
+  text-align: center;
+  height: 2em;
+  width: 2em;
+  line-height: 0.4em;
+  background-color: var(--ol-background-color);
+  border: none;
+  border-radius: 2px;
+}
+
 .center-geolocation-button {
   position: absolute;
-  top: 5rem;
+  bottom: 6rem;
   right: 8px;
   display: block;
   margin: 1px;
@@ -422,13 +472,14 @@
 .coordinate-box-embed {
   position: absolute;
   bottom: 20px;
-  left: 20px;
+  left: 80px;
   z-index: 100;
-  background-color: white;
+  background-color: rgba(169, 166, 166, 0.645);
   text-align: justify;
   padding: 0 10px 0 10px;
   border-radius: 5px;
   margin-right: 20px;
+  font-size: 10px;
 }
 
 .filter-button {
@@ -487,213 +538,8 @@
 
 
 
-
-.sidebar-filter-dashboard {
-  width: 350px;
-  position: fixed;
-  top: 67px;
-  left: -400px;
-  height: 90vh;
-  background: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s;
-  z-index: 1000;
-  overflow-y: scroll;
-}
-
-.sidebar-filter-dashboard.open {
-  left: 70px;
-  z-index: 1000;
-}
-
-
-.sidebar-filter {
-  width: 350px;
-  position: fixed;
-  top: 0;
-  left: -400px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s;
-  z-index: 100;
-  overflow-y: scroll;
-}
-
-.sidebar-filter.open {
-  left: 0;
-  z-index: 100;
-}
-.sidebar-header {
-  width: 100%;
-  position: relative;
-  padding-top: 10px;
-  padding-left: 10px;
-  top: 0px;
-  height: 40px;
-  background: linear-gradient(to right, #0f816f, #274c8b);
-
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  color: #fff;
-}
-
-
-.sidebar-subheader {
-  width: 100%;
-  position: relative;
-  height: 20px;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.sidebar-footer {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  height: 50px;
-  padding: 10px 0 10px 0;
-  align-items: center;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  background: white;
-}
-
-
-.sidebar-footer-dashboard {
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  height: 50px;
-  padding: 0px 0 20px 0;
-  align-items: center;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  background: white;
-}
-.sidebar-content {
-  position: absolute;
-  padding-top: 10px;
-
-  width: 100%;
-  top: 80px;
-  bottom: 70px;
-  overflow-y: auto;
-}
-
-.autodashboard{
-  z-index: 1000000;
-}
-
-.sidebar-data-dashboard {
-  width: 420px;
-  position: fixed;
-  top: 0;
-  left: -420px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s;
-  z-index: 1000;
-  overflow-y: scroll;
-}
-
-.sidebar-data-dashboard.open {
-  left: 0;
-  z-index: 10000;
-}
-
-.sidebar-data {
-  width: 350px;
-  position: fixed;
-  top: 0;
-  left: -400px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-  transition: left 0.3s;
-  z-index: 1000;
-  overflow-y: scroll;
-}
-
-.sidebar-data.open {
-  left: 0;
-  z-index: 10000;
-}
-
-.sidebar-data-toggle {
-  position: absolute;
-  cursor: pointer;
-  text-align: right;
-  padding: 10px;
-  right: 20px;
-  width: 40px;
-  top: 0px;
-}
-
-.caret {
-  display: inline-block;
-  color: #fff;
-}
-
-
-.searchbar-embed {
-  position: absolute;
-  top: 20px;
-  left: 80px;
-  background-color: white;
-  border: 1px solid #000;
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 10;
-  height: 55px;
-  width: 400px;
-}
-
-.loader-container{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #F8F8F8AD;
-}
-
-.loader{
-  left: 50%;
-  top: 30%;
-  z-index: 10000000000;
-  position: absolute;
-}
-
-
 .swal2-popup {
   font-size: 0.8rem !important;
   font-family: Roboto;
 }
 
-
-
-.info-dashboard {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  background-color: white;
-  border: 1px solid #000;
-  padding: 10px;
-  border-radius: 5px;
-  z-index: 100;
-  height: 55px;
-  width: 55px;
-  text-align: center;
-}
-
-/* Show the filter-box when the overlay-select element is hovered */
-.info-dashboard:hover + .basemap-select3 {
-  display: block;
-}
-
-.basemap-select3 {
-  display: none;
-}
-
-.basemap-select3:hover {
-  display: block;
-}

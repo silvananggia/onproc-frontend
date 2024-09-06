@@ -17,9 +17,6 @@ import { Polygon } from "ol/geom";
 import { Style, Stroke } from "ol/style";
 import GeoJSON from 'ol/format/GeoJSON';
 import TileWMS from "ol/source/TileWMS";
-import { get as getProjection } from "ol/proj";
-import { transformExtent } from "ol/proj";
-import axios from "axios";
 
 const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, collectionId, footprints }) => {
   const scale = () =>
@@ -29,7 +26,6 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
       : 1
   
   const wmsLayerName = useSelector((state) => state.map.wmsLayer); // Get the WMS layer name from Redux state
-  const collection = useSelector((state) => state.map.collection); // Get selectedJobId from Redux
 
   useEffect(() => {
     if (!map) {
@@ -116,17 +112,17 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
     if (selectedItem && map) {
       const titilerEndpoint = "https://tiler.aws.element84.com";
      // Manually construct the query string for assets
-     const assetsParam = collection == 'landsat-c2-l2'
+     const assetsParam = collectionId == 'landsat-c2-l2'
      ? ['red', 'green', 'blue'].map(asset => `assets=${asset}`).join('&')
      : 'assets=visual';
 
    const params = new URLSearchParams({
-     ...(collection == 'landsat-c2-l2' ? {
+     ...(collectionId == 'landsat-c2-l2' ? {
        color_formula: 'Gamma RGB 1.7 Saturation 1.7 Sigmoidal RGB 15 0.35',
      } : {})
    }).toString();
 
-   const tileUrl = `${titilerEndpoint}/stac/tiles/{z}/{x}/{y}@${scale()}x.png?url=${process.env.REACT_APP_STAC_URL}/collections/${collection}/items/${selectedItem}&${assetsParam}&${params}`;
+   const tileUrl = `${titilerEndpoint}/stac/tiles/{z}/{x}/{y}@${scale()}x.png?url=${process.env.REACT_APP_STAC_URL}/collections/${collectionId}/items/${selectedItem}&${assetsParam}&${params}`;
 
       // New condition to check if map is valid
       if (map && Object.keys(map).length > 0) {
@@ -140,7 +136,6 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
               maxZoom: 14, // Set appropriate max zoom
               attributions: "ESA",
             }),
-            zIndex: 1, // Set z-index for STAC Layer
           }
         );
 
@@ -171,38 +166,9 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
           params: { 'LAYERS': 'test:'+wmsLayerName, 'TILED': true },
           serverType: 'geoserver',
         }),
-        zIndex: 2, // Set z-index for WMS Layer (higher than STAC)
       });
 
-      map.addLayer(wmsLayer); // Add the WMS layer to the map
-
-      // Get the WMS layer extent using axios
-      const url = `http://10.27.57.92:8080/geoserver/wms?service=WMS&version=1.3.0&request=GetCapabilities`;
-      axios.get(url).then((response) => {
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(response.data, "text/xml");
-        const layers = xmlDoc.getElementsByTagName("Layer");
-        for (let i = 0; i < layers.length; i++) {
-          const name = layers[i].getElementsByTagName("Name")[0].textContent;
-          if (name === `test:${wmsLayerName}`) {
-            const boundingBox = layers[i].getElementsByTagName("BoundingBox")[0];
-            const minX = parseFloat(boundingBox.getAttribute("minx"));
-            const minY = parseFloat(boundingBox.getAttribute("miny"));
-            const maxX = parseFloat(boundingBox.getAttribute("maxx"));
-            const maxY = parseFloat(boundingBox.getAttribute("maxy"));
-            const extent = [minX, minY, maxX, maxY];
-
-            const mapProjection = map.getView().getProjection();
-            const layerProjection = getProjection("EPSG:4326");
-            const transformedExtent = transformExtent(extent, layerProjection, mapProjection);
-            // Enable smooth zooming with animation
-            map.getView().fit(transformedExtent, { padding: [50, 50, 50, 50], duration: 1000, animate: true }); // Added animate option
-            break;
-          }
-        }
-      }).catch((error) => {
-        console.error(`Error fetching WMS capabilities: ${error}`);
-      });
+      map.addLayer(wmsLayer); // Add the new WMS layer to the map
     }
   }, [map, wmsLayerName]);
 

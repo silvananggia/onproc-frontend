@@ -1,13 +1,9 @@
-const userKey = process.env.REACT_APP_USER_KEY;
 export default function authHeader() {
-    const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user'));
 
-    if (token && userKey) {
-      return {
-        "token": token,
-        "userkey":userKey
-      };
-    } else {
-      return {};
-    }
+  if (user && user.accessToken) {
+    return { Authorization: 'Bearer ' + user.accessToken };
+  } else {
+    return {};
   }
+}
