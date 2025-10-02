@@ -145,7 +145,7 @@ const Register = () => {
           />
           <br/>
           <Typography variant="body1" gutterBottom>
-           Daftar Akun Baru
+           Register
           </Typography>
           {message && (
             <Alert severity="error" sx={{ mb: 2 }}>
@@ -233,7 +233,7 @@ const Register = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Masukan Captcha Disini"
+                  label="Enter Captcha Here"
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -259,8 +259,8 @@ const Register = () => {
             </Button>
           </Box>
           <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-            <span>Sudah Memiliki Akun?</span>
-            <Link to="/"> Masuk</Link>
+            <span>Already have an account?</span>
+            <Link to="/"> Login</Link>
           </Typography>
         </Box>
       </Box>

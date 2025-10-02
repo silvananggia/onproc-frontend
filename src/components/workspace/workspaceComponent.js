@@ -31,6 +31,7 @@ import { createJob,setSelectedJob } from '../../actions/jobsActions';
 import { getUserData } from "../../utility/Utils";
 import JobDetailsComponent from '../job/JobDetailsComponent';
 import ProcessingTaskComponent from '../processingbox/ProcessingTaskComponent';
+import ModuleComponent from '../module/ModuleComponent';
 import JobListComponent from '../job/JobListComponent'; // Import the JobListComponent
 import { useSelector } from 'react-redux';
 
@@ -57,10 +58,10 @@ const WorkspaceComponent = () => {
         const jobname = `Burned Area Calculation - ${dataDropItem}`;
         const cpurequired = '1';
         const priority = '1';
-        const command = `http://10.27.57.92:5000/burnedarea?data=${dataDropItem}&sign=${sign}&threshold=${threshold}&idproses=${newJobId}`;
+        const command = `${process.env.REACT_APP_PROCESSING_URL}/burnedarea?data=${dataDropItem}&sign=${sign}&threshold=${threshold}&idproses=${newJobId}`;
 
         try {
-            await dispatch(createJob(newJobId, user.id, jobname, command, cpurequired, priority));
+            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority));
             setJobId(newJobId);
 
         } catch (error) {
@@ -92,23 +93,28 @@ const WorkspaceComponent = () => {
                 ) : (
                     <>
                         <Tabs value={tabValue} onChange={handleTabChange}>
+                            <Tab label="Module" />
                             <Tab label="Processing Task" />
                             <Tab label="Job List" />
                         </Tabs>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 {tabValue === 0 && ( // Show ProcessingTaskComponent when first tab is selected
-                                    <ProcessingTaskComponent
-                                        dataDropItem={dataDropItem}
-                                        setdataDropItem={setdataDropItem}
-                                        sign={sign}
-                                        setSign={setSign}
-                                        threshold={threshold}
-                                        setThreshold={setThreshold}
-                                        onSubmit={handleSubmit}
-                                    />
+                                    
+                                    <ModuleComponent onTabChange={handleTabChange} />
                                 )}
                                 {tabValue === 1 && ( // Show JobListComponent when second tab is selected
+                                    <ProcessingTaskComponent
+                                    dataDropItem={dataDropItem}
+                                    setdataDropItem={setdataDropItem}
+                                    sign={sign}
+                                    setSign={setSign}
+                                    threshold={threshold}
+                                    setThreshold={setThreshold}
+                                    onSubmit={handleSubmit}
+                                />
+                                )}
+                                {tabValue === 2 && ( // Show JobListComponent when second tab is selected
                                     <JobListComponent />
                                 )}
                             </Grid>

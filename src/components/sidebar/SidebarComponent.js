@@ -104,7 +104,10 @@ const SidebarComponent = ({ onHoverItem, onItemSelect, onCollectionSelect, aoiCo
             style={{ color: 'white', fontSize: '20px' }}
           />
         </div>
-        <Typography variant="h4">STAC OL PROC</Typography>
+        <Box display="flex" flexDirection="column">
+          <a href="/" style={{ textDecoration: 'none', color:'#fff' }}><Typography variant="h4">GEOMIMO</Typography></a>
+          <Typography variant="body2" style={{ fontSize: '0.75rem' }}>Geoinformatics Multi Input Multi Output</Typography>
+        </Box>
       </div>
 
       <div className='sidebar-content'>

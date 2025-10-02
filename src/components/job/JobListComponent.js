@@ -12,7 +12,7 @@ const JobListComponent = () => { // Accept onJobSelect as a prop
     const jobList = useSelector((state) => state.job.joblist);
 
     useEffect(() => {
-        dispatch(getAllJobsByUser(user.id));
+        dispatch(getAllJobsByUser(user.username));
     }, [dispatch]);
 
     const handleJobSelect = (jobId) => {

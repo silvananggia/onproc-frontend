@@ -11,7 +11,7 @@ const register = (username, email, password) => {
 };
 
 const login = (username, password) => {
-    return axios.post("/login", {
+    return axios.post("/signin-app", {
         username,
         password,
     });
@@ -24,7 +24,9 @@ const checkAuth = (id) => {
 };
 
 const logout = () => {
-    
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+
     return axios.post("/logout", {}, { headers: authHeader() });
     
 };

@@ -19,7 +19,7 @@ import JobDetailComponent from '../job/JobDetailsComponent'; // Import your JobD
 const ProcessingComponent = () => {
     const dispatch = useDispatch();
     const user = getUserData();
-
+    
     const [isVisible, setIsVisible] = useState(true);
     const [dataDropItem, setdataDropItem] = useState(null);
     const [sign, setSign] = useState('<');
@@ -40,10 +40,11 @@ const ProcessingComponent = () => {
         const jobname = `Burned Area Calculation - ${dataDropItem}`;
         const cpurequired = '1';
         const priority = '1';
-        const command = `http://10.27.57.92:5000/burnedarea?data=${dataDropItem}&sign=${sign}&threshold=${threshold}&idproses=${newJobId}`;
-
+        const command = `${process.env.REACT_APP_PROCESSING_URL}/burnedarea?data=${dataDropItem}&sign=${sign}&threshold=${threshold}&idproses=${newJobId}`;
+        console.log(user);
+        console.log(user.username);
         try {
-            await dispatch(createJob(newJobId, user.id, jobname, command, cpurequired, priority));
+            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority));
             setJobId(newJobId); // Set jobId state
          
             await  dispatch(setSelectedJob(newJobId)); // Dispatch the action

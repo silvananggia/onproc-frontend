@@ -30,9 +30,9 @@ export const getJobById = (id) => async (dispatch) => {
 };
 
 // Action to get all jobs by user
-export const getAllJobsByUser = (userId) => async (dispatch) => {
+export const getAllJobsByUser = (username) => async (dispatch) => {
   try {
-    const res = await JobService.getAllJobsByUser(userId);
+    const res = await JobService.getAllJobsByUser(username);
     dispatch({
       type: GET_ALL_JOB,
       payload: res.data,
@@ -45,9 +45,9 @@ export const getAllJobsByUser = (userId) => async (dispatch) => {
   }
 };
 
-export const createJob = (jobId, userid, jobname, command, cpurequired, priority) => async (dispatch) => {
+export const createJob = (jobId, username, jobname, command, cpurequired, priority) => async (dispatch) => {
   try {
-    const res = await JobService.createJob(jobId, userid, jobname, command, cpurequired, priority);
+    const res = await JobService.createJob(jobId, username, jobname, command, cpurequired, priority);
     dispatch({
       type: CREATE_JOB,
       payload: res.data,

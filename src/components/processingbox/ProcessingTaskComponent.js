@@ -7,7 +7,9 @@ import {
     Box,
     Button,
     TextField,
+    Typography,
 } from '@mui/material';
+import Info from '@mui/icons-material/Info';
 
 const ProcessingTaskComponent = ({
     dataDropItem,
@@ -29,8 +31,19 @@ const ProcessingTaskComponent = ({
     };
 
     return (
-        <>
-            <div className='title-font'>Data :</div>
+        <Box>
+        <Box sx={{ padding: 2,  border: '1px solid #ccc', marginTop: '5px' }}>
+            <div className='title-font'>Burn Area Detection Module</div>
+            <Box sx={{ border: '1px solid #ccc', backgroundColor: '#d3d3d3', padding: 2 }}>
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Info sx={{ marginRight: 1, alignSelf: 'flex-start' }} />
+                    <span>Burn area detection using satellite data analyzes images with the Normalized Burn Ratio (NBR), calculated from NIR and SWIR bands. A threshold is applied to classify burned areas, enabling rapid fire impact assessment using Sentinel-2 or Landsat imagery.</span>
+                </Typography>
+            </Box>
+
+        <div className='title-font' style={{
+                        marginTop: '20px',
+                    }}>Data :</div>
             <Box sx={{ padding: 1 }}>
                 <div
                     onDrop={handleDrop}
@@ -39,7 +52,7 @@ const ProcessingTaskComponent = ({
                         border: '2px dashed #ccc',
                         padding: '20px',
                         textAlign: 'center',
-                        marginTop: '20px',
+                        marginTop: '5px',
                     }}
                 >
                     {dataDropItem ? (
@@ -96,7 +109,8 @@ const ProcessingTaskComponent = ({
                     Submit
                 </Button>
             </Box>
-        </>
+        </Box>
+        </Box>
     );
 };
 

@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+import Loading from "./components/layouts/loading";
 import "./assets/scss/style.scss";
 
 const LazyApp = lazy(() => import("./App"));
@@ -12,7 +13,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-      <Suspense fallback={"Loading .."}>
+      <Suspense fallback={<Loading />}>
         <LazyApp />
       </Suspense>
     </Provider>

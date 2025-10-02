@@ -49,7 +49,7 @@ const JobDetailsComponent = ({ jobId }) => {
 
     const handleDownloadGeoTIFF = () => {
         if (jobDetails && jobDetails.layer) {
-            const downloadUrl = `http://10.27.57.92:8080/geoserver/test/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=test:${jobDetails.layer}&format=image/tiff`;
+            const downloadUrl = process.env.REACT_APP_GEOSERVER_URL + `/test/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=test:${jobDetails.layer}&format=image/tiff`;
             const link = document.createElement('a');
             link.href = downloadUrl;
             link.setAttribute('download', `${jobDetails.job_name}.tiff`); // Set the filename

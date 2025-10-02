@@ -3,10 +3,10 @@ import authHeader from "./auth-header";
 
 
 
-const createJob = (jobId, userId, jobname, command, cpuRequired, priority ) => {
+const createJob = (jobId, username, jobname, command, cpuRequired, priority ) => {
     return axios.post("/jobs" , {
         jobId,
-        userId,
+        username,
         jobname,
         command,
         cpuRequired,
@@ -19,8 +19,8 @@ const getJobById = (id) => {
     return axios.get(`/jobs/${id}`, { headers: authHeader() });
 };
 
-const getAllJobsByUser = (userId) => {
-    return axios.get(`/jobs/user/${userId}`, { headers: authHeader() });
+const getAllJobsByUser = (username) => {
+    return axios.get(`/jobs/user/${username}`, { headers: authHeader() });
 };
 
 const jobService = {

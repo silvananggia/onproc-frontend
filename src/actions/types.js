@@ -10,9 +10,13 @@ export const GET_ROLES = "GET_ROLES";
 export const CREATE_JOB = "CREATE_JOB";
 export const GET_JOB = "GET_JOB";
 export const GET_ALL_JOB = "GET_ALL_JOB";
+export const GET_HOTSPOT_INFO = "GET_HOTSPOT_INFO";
+export const GET_LOCATION_LOOKUP = "GET_LOCATION_LOOKUP";
+export const GET_HOTSPOT_DETAIL = "GET_HOTSPOT_DETAIL";
 
 export const GET_RESULT = "VIEW_RESULT";
 export const SET_SELECTED_JOB = 'SET_SELECTED_JOB';
 
 export const ADD_WMS_LAYER = 'ADD_WMS_LAYER';
 export const SET_COLLECTION = 'SET_COLLECTION';
+

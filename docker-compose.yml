@@ -4,8 +4,19 @@ services:
   app:
     build: .
     ports:
-      - "3000:3000"
+      - "80:80"
     volumes:
       - .:/usr/src/app
+      - /mnt/DataCitra/DataProses/:/data
+      - /mnt/DataCitra/Proyek/GeoMIMO/DataProses/:/data-medres
     environment:
       NODE_ENV: development
+    container_name: onproc-frontend
+    networks:
+      gisnet:
+        aliases:
+          - frontend.gisnet
+
+networks:
+  gisnet:
+    external: true

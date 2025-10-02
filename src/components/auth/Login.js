@@ -53,7 +53,7 @@ const Login = () => {
 
       navigate("/map");
     } else {
-      navigate("/");
+      navigate("/signin-app");
     }
   }, [isAuthenticated, navigate]);
 
@@ -166,13 +166,13 @@ const Login = () => {
           />
           <br/>
           <Typography variant="body1" gutterBottom>
-           Masuk Ke Aplikasi
+          Login to the GEOMIMO
           </Typography>
-          {message && (
+         {/*  {message && (
             <Alert severity="error" sx={{ mb: 2 }}>
               {message}
             </Alert>
-          )}
+          )} */}
           <Box component="form" onSubmit={handleSubmit(handleLogin)} sx={{ width: '100%' }}>
             <Controller
               name="username"
@@ -232,7 +232,7 @@ const Login = () => {
               render={({ field }) => (
                 <TextField
                   {...field}
-                  label="Masukan Captcha Disini"
+                  label="Enter Captcha Here"
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -258,8 +258,8 @@ const Login = () => {
             </Button>
           </Box>
           <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-            <span>Belum Memiliki Akun?</span>
-            <Link to="/register"> Daftar</Link>
+            <span>Don't have an account yet?</span>
+            <Link to="/register"> Register</Link>
           </Typography>
         </Box>
       </Box>

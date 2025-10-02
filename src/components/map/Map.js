@@ -167,7 +167,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
       const wmsLayer = new TileLayer({
         title: "WMS Layer",
         source: new TileWMS({
-          url: 'http://10.27.57.92:8080/geoserver/wms',
+          url: process.env.REACT_APP_GEOSERVER_URL + '/wms',
           params: { 'LAYERS': 'test:'+wmsLayerName, 'TILED': true },
           serverType: 'geoserver',
         }),
@@ -177,7 +177,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
       map.addLayer(wmsLayer); // Add the WMS layer to the map
 
       // Get the WMS layer extent using axios
-      const url = `http://10.27.57.92:8080/geoserver/wms?service=WMS&version=1.3.0&request=GetCapabilities`;
+      const url = process.env.REACT_APP_GEOSERVER_URL + '/wms?service=WMS&version=1.3.0&request=GetCapabilities';
       axios.get(url).then((response) => {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(response.data, "text/xml");
