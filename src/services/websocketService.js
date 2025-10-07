@@ -13,7 +13,7 @@ class WebSocketService {
       return;
     }
 
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:9001';
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://geomimo-prototype.brin.go.id/be';
     console.log('🔌 WebSocket: Connecting to:', backendUrl);
     
     this.socket = io(backendUrl, {
