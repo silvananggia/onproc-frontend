@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { getJobById, setSelectedJob } from '../../actions/jobsActions';
-import { addWmsLayer } from '../../actions/mapActions'; // Import the action
+import { addWmsLayer } from '../../actions/mapActions';
 import { Typography, Box, Button, Chip } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import useWebSocketJob from '../../hooks/useWebSocketJob';
@@ -23,24 +23,19 @@ function LinearProgressWithLabel(props) {
 }
 
 LinearProgressWithLabel.propTypes = {
-    /**
-     * The value of the progress indicator for the determinate and buffer variants.
-     * Value between 0 and 100.
-     */
     value: PropTypes.number.isRequired,
 };
 
 const JobDetailsComponent = ({ jobId }) => {
     const dispatch = useDispatch();
     const jobDetails = useSelector((state) => state.job.jobobj);
-    
-    // Debug logging
+
     console.log('📊 JobDetailsComponent: Rendering with jobId:', jobId);
     console.log('📊 JobDetailsComponent: jobDetails:', jobDetails);
     console.log('📊 JobDetailsComponent: jobDetails.progress:', jobDetails?.progress);
     console.log('📊 JobDetailsComponent: jobDetails.status:', jobDetails?.status);
-    
-    // Use WebSocket hook for real-time updates
+
+    // WebSocket for live updates
     const { isConnected } = useWebSocketJob(jobId);
 
     useEffect(() => {
@@ -48,21 +43,25 @@ const JobDetailsComponent = ({ jobId }) => {
     }, [dispatch, jobId]);
 
     const handleBack = () => {
-        dispatch(setSelectedJob(null)); // Clear the selected job ID
+        dispatch(setSelectedJob(null));
     };
 
+    // Ambil layer dari results
+    const layerName = jobDetails?.results?.[0]?.layer;
+    const workspace = jobDetails?.results?.[0]?.workspace || 'test';
+
     const handleAddWmsLayer = () => {
-        if (jobDetails && jobDetails.layer) {
-            dispatch(addWmsLayer(jobDetails.layer)); // Dispatch the action to add WMS layer
+        if (layerName) {
+            dispatch(addWmsLayer(layerName));
         }
     };
 
     const handleDownloadGeoTIFF = () => {
-        if (jobDetails && jobDetails.layer) {
-            const downloadUrl = process.env.REACT_APP_GEOSERVER_URL + `/test/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=test:${jobDetails.layer}&format=image/tiff`;
+        if (layerName) {
+            const downloadUrl = `${process.env.REACT_APP_GEOSERVER_URL}/${workspace}/wcs?service=WCS&version=2.0.1&request=GetCoverage&CoverageId=${workspace}:${layerName}&format=image/tiff`;
             const link = document.createElement('a');
             link.href = downloadUrl;
-            link.setAttribute('download', `${jobDetails.job_name}.tiff`); // Set the filename
+            link.setAttribute('download', `${jobDetails.job_name}.tiff`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -75,7 +74,7 @@ const JobDetailsComponent = ({ jobId }) => {
 
     return (
         <div>
-            <Button onClick={handleBack} variant="outlined">Back to Job List</Button> {/* Back button */}
+            <Button onClick={handleBack} variant="outlined">Back to Job List</Button>
             <Box display="flex" alignItems="center" gap={1} mb={2}>
                 <h3 style={{ margin: 0 }}>Job Details</h3>
                 <Chip 
@@ -84,14 +83,16 @@ const JobDetailsComponent = ({ jobId }) => {
                     size="small"
                 />
             </Box>
+
             <Box display="grid" gridTemplateColumns="1fr 2fr" gap={2}>
                 <Typography variant="body2" fontWeight="bold">Job Name:</Typography>
                 <Typography variant="body2">{jobDetails.job_name}</Typography>
+
                 <Typography variant="body2" fontWeight="bold">Date:</Typography>
                 <Typography variant="body2">{new Date(jobDetails.created_at).toLocaleString()}</Typography>
+
                 <Typography variant="body2" fontWeight="bold">Job ID:</Typography>
                 <Typography variant="body2">{jobDetails.id}</Typography>
-
 
                 {(() => {
                     if (jobDetails && jobDetails.command) {
@@ -104,6 +105,7 @@ const JobDetailsComponent = ({ jobId }) => {
                             <>
                                 <Typography variant="body2" fontWeight="bold">Data:</Typography>
                                 <Typography variant="body2">{data}</Typography>
+
                                 <Typography variant="body2" fontWeight="bold">Threshold:</Typography>
                                 <Typography variant="body2">{sign} {threshold}</Typography>
                             </>
@@ -111,30 +113,45 @@ const JobDetailsComponent = ({ jobId }) => {
                     }
                 })()}
 
-                <Typography variant="body2" fontWeight="bold" >Status:</Typography>
+                <Typography variant="body2" fontWeight="bold">Status:</Typography>
                 {jobDetails.status && (
-                <Chip label={jobDetails.status.toUpperCase()} color={jobDetails.status === 'finished' ? 'success' : 'primary'} /> 
+                    <Chip 
+                        label={jobDetails.status.toUpperCase()} 
+                        color={jobDetails.status === 'finished' ? 'success' : 'primary'} 
+                    /> 
                 )}
-                {jobDetails.status !== 'finished' && ( // Check if status is not finished
+
+                {jobDetails.status !== 'finished' && (
                     <>
                         <Typography variant="body2" fontWeight="bold">Progress:</Typography>
                         <LinearProgressWithLabel value={jobDetails.progress} />
                     </>
                 )}
-                
-            </Box>
-            <Box sx={{ mt: 2 }} /> 
-            {jobDetails.layer && (
-                    <>
-                        
-                        <Box display="flex" flexDirection="column" gap={1}> {/* Added Box for layout */}
-                            <Button onClick={handleAddWmsLayer} variant="outlined" fullWidth>Show on Map</Button> {/* Set fullWidth for equal width */}
-                            <Button onClick={handleDownloadGeoTIFF} variant="outlined" fullWidth>Download GeoTIFF</Button> {/* Set fullWidth for equal width */}
-                        </Box>
-                    </>
-                )}
-        </div>
 
+                <Typography variant="body2" fontWeight="bold">Started:</Typography>
+                <Typography variant="body2">
+                    {jobDetails.time_start ? new Date(jobDetails.time_start).toLocaleString() : '-'}
+                </Typography>
+
+                <Typography variant="body2" fontWeight="bold">Finished:</Typography>
+                <Typography variant="body2">
+                    {jobDetails.time_finish ? new Date(jobDetails.time_finish).toLocaleString() : '-'}
+                </Typography>
+            </Box>
+
+            <Box sx={{ mt: 2 }} />
+
+            {layerName && (
+                <Box display="flex" flexDirection="column" gap={1}>
+                    <Button onClick={handleAddWmsLayer} variant="outlined" fullWidth>
+                        Show on Map
+                    </Button>
+                    <Button onClick={handleDownloadGeoTIFF} variant="outlined" fullWidth>
+                        Download GeoTIFF
+                    </Button>
+                </Box>
+            )}
+        </div>
     );
 };
 
