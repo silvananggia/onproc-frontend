@@ -40,9 +40,11 @@ export const getAllJobsByUser = (username) => async (dispatch) => {
       payload: res.data,
     });
   } catch (error) {
+    console.error('Error fetching jobs:', error);
+    // Set empty array instead of error message to prevent .map() errors
     dispatch({
       type: GET_ALL_JOB,
-      payload: error.response.data.error,
+      payload: [],
     });
   }
 };

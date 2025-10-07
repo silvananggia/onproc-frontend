@@ -37,7 +37,7 @@ function jobReducer(job = initialstate, action) {
       return {
         loading: false,
         errmessage: "",
-        joblist: action.payload,
+        joblist: Array.isArray(action.payload) ? action.payload : [],
         jobobj: {},
       };
 

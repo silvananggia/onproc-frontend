@@ -22,7 +22,7 @@ const JobListComponent = () => { // Accept onJobSelect as a prop
     return (
         <div>
             <h3>Job List</h3>
-            {jobList.length > 0 ? (
+            {Array.isArray(jobList) && jobList.length > 0 ? (
                 <List>
                     {jobList.map(job => (
                         <ListItem key={job.id} button onClick={() => handleJobSelect(job.id)}> {/* Call onJobSelect on click */}

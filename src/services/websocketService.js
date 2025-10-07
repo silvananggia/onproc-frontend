@@ -13,19 +13,26 @@ class WebSocketService {
       return;
     }
 
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://geomimo-prototype.brin.go.id/be';
+    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'https://geomimo-prototype.brin.go.id';
     console.log('🔌 WebSocket: Connecting to:', backendUrl);
+    console.log('🔌 WebSocket: Using path:', '/be/socket.io/');
     
     this.socket = io(backendUrl, {
       path: '/be/socket.io/',
-      transports: ['websocket', 'polling'],
+      transports: ['polling', 'websocket'], // Try polling first, then websocket
       autoConnect: true,
       timeout: 20000,
-      forceNew: true
+      forceNew: true,
+      upgrade: true,
+      rememberUpgrade: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000
     });
 
     this.socket.on('connect', () => {
       console.log('✅ WebSocket: Connected successfully:', this.socket.id);
+      console.log('✅ WebSocket: Namespace:', this.socket.nsp);
       this.isConnected = true;
     });
 
@@ -36,7 +43,22 @@ class WebSocketService {
 
     this.socket.on('connect_error', (error) => {
       console.error('❌ WebSocket: Connection error:', error);
+      console.error('❌ WebSocket: Error details:', {
+        message: error.message,
+        description: error.description,
+        context: error.context,
+        type: error.type
+      });
       this.isConnected = false;
+    });
+
+    // Add additional error handlers
+    this.socket.on('error', (error) => {
+      console.error('❌ WebSocket: Socket error:', error);
+    });
+
+    this.socket.on('reconnect_error', (error) => {
+      console.error('❌ WebSocket: Reconnection error:', error);
     });
 
     this.socket.on('reconnect', (attemptNumber) => {
