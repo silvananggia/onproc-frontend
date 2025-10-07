@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Processing.scss';
 import {
     Typography,
@@ -15,6 +15,7 @@ import { getUserData } from "../../utility/Utils";
 import ProcessingTaskComponent from './ProcessingTaskComponent';
 import { getJobById, setSelectedJob } from '../../actions/jobsActions'; // Import the action
 import JobDetailComponent from '../job/JobDetailsComponent'; // Import your JobDetailComponent
+import useWebSocketJob from '../../hooks/useWebSocketJob';
 
 const ProcessingComponent = () => {
     const dispatch = useDispatch();
@@ -25,6 +26,9 @@ const ProcessingComponent = () => {
     const [sign, setSign] = useState('<');
     const [threshold, setThreshold] = useState('0.05');
     const [jobId, setJobId] = useState(null);
+    
+    // Use WebSocket hook for real-time updates when jobId is available
+    const { isConnected } = useWebSocketJob(jobId);
 
     const togglePanel = () => {
         setIsVisible(!isVisible);
@@ -41,13 +45,22 @@ const ProcessingComponent = () => {
         const cpurequired = '1';
         const priority = '1';
         const command = `${process.env.REACT_APP_PROCESSING_URL}/burnedarea?data=${dataDropItem}&sign=${sign}&threshold=${threshold}&idproses=${newJobId}`;
-        console.log(user);
-        console.log(user.username);
+        
+        // Set timestamps
+        const timeStart = new Date().toISOString();
+        const timeFinish = null; // Will be set when job completes
+        
+        console.log('🕐 Job Creation Timestamps:');
+        console.log('  - Job ID:', newJobId);
+        console.log('  - Time Start:', timeStart);
+        console.log('  - Time Finish:', timeFinish);
+        console.log('  - User:', user.username);
+        
         try {
-            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority));
+            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority, timeStart, timeFinish));
             setJobId(newJobId); // Set jobId state
          
-            await  dispatch(setSelectedJob(newJobId)); // Dispatch the action
+            await dispatch(setSelectedJob(newJobId)); // Dispatch the action
             await dispatch(getJobById(newJobId));
         } catch (error) {
             console.error("Error:", error);

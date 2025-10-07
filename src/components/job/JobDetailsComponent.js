@@ -5,6 +5,7 @@ import { getJobById, setSelectedJob } from '../../actions/jobsActions';
 import { addWmsLayer } from '../../actions/mapActions'; // Import the action
 import { Typography, Box, Button, Chip } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
+import useWebSocketJob from '../../hooks/useWebSocketJob';
 
 function LinearProgressWithLabel(props) {
     return (
@@ -32,6 +33,15 @@ LinearProgressWithLabel.propTypes = {
 const JobDetailsComponent = ({ jobId }) => {
     const dispatch = useDispatch();
     const jobDetails = useSelector((state) => state.job.jobobj);
+    
+    // Debug logging
+    console.log('📊 JobDetailsComponent: Rendering with jobId:', jobId);
+    console.log('📊 JobDetailsComponent: jobDetails:', jobDetails);
+    console.log('📊 JobDetailsComponent: jobDetails.progress:', jobDetails?.progress);
+    console.log('📊 JobDetailsComponent: jobDetails.status:', jobDetails?.status);
+    
+    // Use WebSocket hook for real-time updates
+    const { isConnected } = useWebSocketJob(jobId);
 
     useEffect(() => {
         dispatch(getJobById(jobId));
@@ -66,7 +76,14 @@ const JobDetailsComponent = ({ jobId }) => {
     return (
         <div>
             <Button onClick={handleBack} variant="outlined">Back to Job List</Button> {/* Back button */}
-            <h3>Job Details</h3>
+            <Box display="flex" alignItems="center" gap={1} mb={2}>
+                <h3 style={{ margin: 0 }}>Job Details</h3>
+                <Chip 
+                    label={isConnected ? "Live Updates" : "Offline"} 
+                    color={isConnected ? "success" : "default"}
+                    size="small"
+                />
+            </Box>
             <Box display="grid" gridTemplateColumns="1fr 2fr" gap={2}>
                 <Typography variant="body2" fontWeight="bold">Job Name:</Typography>
                 <Typography variant="body2">{jobDetails.job_name}</Typography>

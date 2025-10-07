@@ -4,6 +4,8 @@ import {
   GET_ALL_JOB, 
   GET_RESULT ,
   SET_SELECTED_JOB,
+  UPDATE_JOB_STATUS,
+  UPDATE_JOB_PROGRESS,
 } from "./types";
 
 import JobService from "../services/jobService";
@@ -45,9 +47,9 @@ export const getAllJobsByUser = (username) => async (dispatch) => {
   }
 };
 
-export const createJob = (jobId, username, jobname, command, cpurequired, priority) => async (dispatch) => {
+export const createJob = (jobId, username, jobname, command, cpurequired, priority, timeStart = null, timeFinish = null) => async (dispatch) => {
   try {
-    const res = await JobService.createJob(jobId, username, jobname, command, cpurequired, priority);
+    const res = await JobService.createJob(jobId, username, jobname, command, cpurequired, priority, timeStart, timeFinish);
     dispatch({
       type: CREATE_JOB,
       payload: res.data,
@@ -59,5 +61,17 @@ export const createJob = (jobId, username, jobname, command, cpurequired, priori
     });
   }
 };
+
+// Action to update job status (for real-time updates)
+export const updateJobStatus = (jobId, status, progress) => ({
+  type: UPDATE_JOB_STATUS,
+  payload: { jobId, status, progress },
+});
+
+// Action to update job progress (for real-time updates)
+export const updateJobProgress = (jobId, progress) => ({
+  type: UPDATE_JOB_PROGRESS,
+  payload: { jobId, progress },
+});
 
 

@@ -3,15 +3,16 @@ import authHeader from "./auth-header";
 
 
 
-const createJob = (jobId, username, jobname, command, cpuRequired, priority ) => {
+const createJob = (jobId, username, jobname, command, cpuRequired, priority, timeStart = null, timeFinish = null) => {
     return axios.post("/jobs" , {
         jobId,
         username,
         jobname,
         command,
         cpuRequired,
-        priority
-
+        priority,
+        timeStart,
+        timeFinish
     }, { headers: authHeader() });
 };
 

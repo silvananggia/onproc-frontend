@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Workspace.scss';
 import {
     Typography,
@@ -20,11 +20,15 @@ import {
     Menu,
     IconButton,
     Divider,
-    TextField
+    TextField,
+    Chip,
+    Tooltip
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloudIcon from '@mui/icons-material/Cloud';
 import CloudQueueIcon from '@mui/icons-material/CloudQueue';
+import WifiIcon from '@mui/icons-material/Wifi';
+import WifiOffIcon from '@mui/icons-material/WifiOff';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -44,11 +48,15 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import { logout } from '../../actions/authActions';
 import { useNavigate } from 'react-router-dom';
+import useWebSocketJob from '../../hooks/useWebSocketJob';
+import websocketService from '../../services/websocketService';
 
 const WorkspaceComponent = ({ aoiCoords = null }) => {
     const [isVisible, setIsVisible] = useState(true);
     const [tabValue, setTabValue] = useState(0); // State to manage the selected tab
     const [profileAnchorEl, setProfileAnchorEl] = useState(null);
+    const [wsConnected, setWsConnected] = useState(false);
+    const [lastJobUpdate, setLastJobUpdate] = useState(null);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -89,9 +97,13 @@ const WorkspaceComponent = ({ aoiCoords = null }) => {
         const cpurequired = '1';
         const priority = '1';
         const command = `${process.env.REACT_APP_PROCESSING_URL}/burnedarea?data=${dataDropItem}&sign=${sign}&threshold=${threshold}&idproses=${newJobId}`;
+        
+        // Set timestamps
+        const timeStart = new Date().toISOString();
+        const timeFinish = null; // Will be set when job completes
 
         try {
-            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority));
+            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority, timeStart, timeFinish));
             setJobId(newJobId);
 
         } catch (error) {
@@ -179,8 +191,18 @@ const WorkspaceComponent = ({ aoiCoords = null }) => {
         console.log('API Command:', command);
         console.log('User:', user.username);
         
+        // Set timestamps
+        const timeStart = new Date().toISOString();
+        const timeFinish = null; // Will be set when job completes
+        
+        console.log('🕐 Rice Planting Job Creation Timestamps:');
+        console.log('  - Job ID:', newJobId);
+        console.log('  - Time Start:', timeStart);
+        console.log('  - Time Finish:', timeFinish);
+        console.log('  - User:', user.username);
+        
         try {
-            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority));
+            await dispatch(createJob(newJobId, user.username, jobname, command, cpurequired, priority, timeStart, timeFinish));
             setJobId(newJobId);
             
             // Switch to Job List tab to show the created job
@@ -217,6 +239,61 @@ const WorkspaceComponent = ({ aoiCoords = null }) => {
     };
 
     const selectedJobId = useSelector((state) => state.job.selectedJobId); // Get selectedJobId from Redux
+
+    // WebSocket connection management
+    useEffect(() => {
+        console.log('🔌 Workspace: Initializing WebSocket connection...');
+        
+        // Connect to WebSocket if not already connected
+        if (!websocketService.getConnectionStatus()) {
+            console.log('🔌 Workspace: Connecting to WebSocket...');
+            websocketService.connect();
+        }
+
+        // Set up connection status listener
+        const handleConnectionChange = () => {
+            const connected = websocketService.getConnectionStatus();
+            console.log('🔌 Workspace: WebSocket connection status:', connected);
+            setWsConnected(connected);
+        };
+
+        // Listen for connection events
+        websocketService.on('connect', handleConnectionChange);
+        websocketService.on('disconnect', handleConnectionChange);
+
+        // Set initial connection status
+        setWsConnected(websocketService.getConnectionStatus());
+
+        // Cleanup function
+        return () => {
+            websocketService.off('connect', handleConnectionChange);
+            websocketService.off('disconnect', handleConnectionChange);
+        };
+    }, []);
+
+    // Real-time job updates for job list
+    useEffect(() => {
+        if (!wsConnected) return;
+
+        console.log('🔔 Workspace: Setting up job update listener...');
+        
+        const handleJobUpdate = (data) => {
+            console.log('🔔 Workspace: Received job update:', data);
+            setLastJobUpdate({
+                jobId: data.jobId,
+                status: data.status,
+                progress: data.progress,
+                timestamp: new Date()
+            });
+            // The job list will automatically update through Redux
+        };
+
+        websocketService.onJobUpdate(handleJobUpdate);
+
+        return () => {
+            websocketService.offJobUpdate(handleJobUpdate);
+        };
+    }, [wsConnected]);
 
     return (
         <div className={`workspace ${isVisible ? '' : 'hidden'}`}>
@@ -265,12 +342,35 @@ const WorkspaceComponent = ({ aoiCoords = null }) => {
                         </div>
                     </div>
                     
-                    {/* Profile Section */}
+                    {/* WebSocket Status & Profile Section */}
                     <div style={{ 
                         display: 'flex', 
-                        justifyContent: 'flex-end',
+                        justifyContent: 'space-between',
                         alignItems: 'center'
                     }}>
+                        {/* WebSocket Connection Status */}
+                        <Tooltip title={wsConnected ? "Real-time updates connected" : "Real-time updates disconnected"}>
+                            <Chip
+                                icon={wsConnected ? <WifiIcon /> : <WifiOffIcon />}
+                                label={wsConnected ? "Live Updates" : "Offline"}
+                                size="small"
+                                sx={{
+                                    background: wsConnected ? 'rgba(76, 175, 80, 0.2)' : 'rgba(244, 67, 54, 0.2)',
+                                    color: wsConnected ? '#4CAF50' : '#f44336',
+                                    border: `1px solid ${wsConnected ? 'rgba(76, 175, 80, 0.3)' : 'rgba(244, 67, 54, 0.3)'}`,
+                                    fontWeight: 500,
+                                    '& .MuiChip-icon': {
+                                        color: 'inherit'
+                                    }
+                                }}
+                            />
+                        </Tooltip>
+                        
+                        {/* Profile Section */}
+                        <div style={{ 
+                            display: 'flex', 
+                            alignItems: 'center'
+                        }}>
                         {user ? (
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                 <div style={{
@@ -402,6 +502,7 @@ const WorkspaceComponent = ({ aoiCoords = null }) => {
                                 Login
                             </Button>
                         )}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -413,6 +514,48 @@ const WorkspaceComponent = ({ aoiCoords = null }) => {
                 boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
                 minHeight: '400px'
             }}>
+                {/* Real-time Job Update Notification */}
+                {lastJobUpdate && (
+                    <Box sx={{ 
+                        mb: 2,
+                        p: 2,
+                        background: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)',
+                        borderRadius: '12px',
+                        border: '1px solid #90caf9',
+                        boxShadow: '0 2px 8px rgba(33, 150, 243, 0.1)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <WifiIcon sx={{ color: '#2196f3', fontSize: '20px' }} />
+                            <div style={{ flex: 1 }}>
+                                <Typography variant="body2" sx={{ 
+                                    color: '#1976d2', 
+                                    fontWeight: 500,
+                                    fontSize: '0.9rem'
+                                }}>
+                                    Job Update: {lastJobUpdate.jobId.substring(0, 8)}... 
+                                    - Status: <strong>{lastJobUpdate.status}</strong>
+                                    {lastJobUpdate.progress !== undefined && (
+                                        <> - Progress: <strong>{lastJobUpdate.progress}%</strong></>
+                                    )}
+                                </Typography>
+                                <Typography variant="caption" sx={{ 
+                                    color: '#1976d2', 
+                                    opacity: 0.8,
+                                    fontSize: '0.75rem'
+                                }}>
+                                    {lastJobUpdate.timestamp.toLocaleTimeString()}
+                                </Typography>
+                            </div>
+                            <IconButton 
+                                size="small" 
+                                onClick={() => setLastJobUpdate(null)}
+                                sx={{ color: '#1976d2' }}
+                            >
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </div>
+                    </Box>
+                )}
                 {selectedJobId ? (
                     <JobDetailsComponent jobId={selectedJobId} />
                 ) : (

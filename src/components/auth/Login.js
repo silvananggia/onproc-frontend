@@ -51,7 +51,7 @@ const Login = () => {
   useEffect(() => {
     if (user && user.role) {
 
-      navigate("/map");
+      navigate("/katalog-modul");
     } else {
       navigate("/signin-app");
     }
@@ -120,7 +120,7 @@ const Login = () => {
         if (loginResult && loginResult.type === "LOGIN_SUCCESS") {
         //  const updatedUser = useSelector((state) => state.auth.user);
           //localStorage.setItem("user", JSON.stringify(updatedUser));
-                navigate("/map");
+                navigate("/katalog-modul");
         } else {
           dispatch(setMessage('Mohon Periksa Username dan Password'));
           const canvas = canvasRef.current;
