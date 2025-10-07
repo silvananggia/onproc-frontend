@@ -17,6 +17,7 @@ class WebSocketService {
     console.log('🔌 WebSocket: Connecting to:', backendUrl);
     
     this.socket = io(backendUrl, {
+      path: '/be/socket.io/',
       transports: ['websocket', 'polling'],
       autoConnect: true,
       timeout: 20000,
