@@ -103,7 +103,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
         source: new TileWMS({
           url: "https://geomimo-prototype.brin.go.id/service//geoserver/test/wms",
           params: {
-            'LAYERS': 'test:IP_2023',
+            'LAYERS': 'test:IP_LBS_2023',
             TILED: true,
             VERSION: '1.1.1',
             FORMAT: 'image/png',
@@ -127,7 +127,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
         source: new TileWMS({
           url: "https://geomimo-prototype.brin.go.id/service/geoserver/test/wms",
           params: {
-            'LAYERS': 'test:IP_2024',
+            'LAYERS': 'test:IP_LBS_2024',
             TILED: true,
             VERSION: '1.1.1',
             FORMAT: 'image/png',
@@ -241,8 +241,8 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
             }
           );
         };
-        const url2023 = getUrl('test:IP_2023');
-        const url2024 = getUrl('test:IP_2024');
+        const url2023 = getUrl('test:IP_LBS_2023');
+        const url2024 = getUrl('test:IP_LBS_2024');
 
         // Highlight selected pixel
         if (highlightLayerRef.current) {
