@@ -40,7 +40,6 @@ import { createJob,setSelectedJob } from '../../actions/jobsActions';
 import { getUserData } from "../../utility/Utils";
 import JobDetailsComponent from '../job/JobDetailsComponent';
 import ProcessingTaskComponent from '../processingbox/ProcessingTaskComponent';
-import ModuleComponent from '../module/ModuleComponent';
 import JobListComponent from '../job/JobListComponent'; // Import the JobListComponent
 import { useSelector } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';

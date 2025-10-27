@@ -18,6 +18,7 @@ export default function ZppiMap() {
   const itemsPerPage = 10;
   const [totalPages, setTotalPages] = useState(1);
   const [popup, setPopup] = useState(null);
+  const [legendUrl, setLegendUrl] = useState(null);
   const [activeSections, setActiveSections] = useState({
     data: false,
     method: false,
@@ -199,12 +200,9 @@ export default function ZppiMap() {
     map.addLayer(newLayer);
     currentLayerRef.current = newLayer;
     
-    // Log the layer configuration
-    console.log('Layer selected:', {
-      name: name,
-      slug: slug,
-      source: wmsSource.getParams()
-    });
+    // Update legend URL
+    const legendUrl = `https://spbn.brin.go.id/geoserver/lapan/wms?service=WMS&version=1.1.0&request=GetLegendGraphic&layer=lapan:${slug}&format=image/png&style=zppi&legend_options=fontAntiAliasing:true;fontSize:12;fontName:Arial;dx:0.5;dy:0.5;forceLabels:on;`;
+    setLegendUrl(legendUrl);
   };
 
   const paginatedData = layersData.slice(
@@ -307,9 +305,25 @@ export default function ZppiMap() {
           </div>
         </div>
       </div>
-      <div id="map" className="map-container"></div>
-     
-
+      <div className="map-wrapper">
+        <div id="map" className="map-container"></div>
+        {legendUrl && (
+          <div className="legend-box">
+            <div className="legend-header">
+              <h4>Legend</h4>
+            </div>
+            <div className="legend-content">
+              <img 
+                src={legendUrl} 
+                alt="Legend" 
+                onError={(e) => {
+                  console.error('Failed to load legend image:', legendUrl);
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

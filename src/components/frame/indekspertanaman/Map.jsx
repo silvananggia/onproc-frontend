@@ -25,6 +25,9 @@ import { Point } from 'ol/geom';
 import { Circle as CircleStyle, Fill } from 'ol/style';
 
 const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, collectionId, footprints }) => {
+  // Legend URL state
+  const [legendUrl, setLegendUrl] = useState(null);
+  
   // Layer visibility state
   const [layerVisibility, setLayerVisibility] = useState({
     basemap: true,
@@ -121,7 +124,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
       wmsLayerRef.current = wmsLayer;
       map.addLayer(wmsLayer);
 
-      // --- WMS LAYER IP_2024 ---
+      // --- WMS LAYER IP_LBS_2024 ---
       const wms2024Layer = new TileLayer({
         title: "WMS IP 2024",
         source: new TileWMS({
@@ -144,6 +147,10 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
       });
       wms2024LayerRef.current = wms2024Layer;
       map.getLayers().insertAt(2, wms2024Layer); // After sawah2023, before wmsLayer
+
+      // Set legend URL for IP 2024
+      const legendUrl = `https://geomimo-prototype.brin.go.id/service/geoserver/test/wms?service=WMS&version=1.1.0&request=GetLegendGraphic&layer=test:IP_LBS_2024&format=image/png`;
+      setLegendUrl(legendUrl);
 
       // --- ARCGIS REST LAYER: Sawah 2023 ---
       const sawah2023Layer = new TileLayer({
@@ -214,7 +221,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
       const handleMapClick = (evt) => {
         const view = map.getView();
         const viewResolution = view.getResolution();
-        // --- GetFeatureInfo for both IP_2023 and IP_2024 ---
+        // --- GetFeatureInfo for both IP_LBS_2023 and IP_LBS_2024 ---
         const wmsUrl = "https://geomimo-prototype.brin.go.id/service/geoserver/test/wms";
         const getUrl = (layer) => {
           return new TileWMS({
@@ -327,7 +334,54 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef, bbox, selectedItem, col
 
   return (
     <>
-      <div id="map" className="map"></div>
+      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <div id="map" className="map"></div>
+        {legendUrl && (
+          <div style={{
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            backgroundColor: 'white',
+            border: '1px solid #ccc',
+            padding: '10px',
+            borderRadius: '5px',
+            zIndex: 1000,
+            maxWidth: '250px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+          }}>
+            <div style={{
+              marginBottom: '8px',
+              borderBottom: '1px solid #e5e7eb',
+              paddingBottom: '5px'
+            }}>
+              <h4 style={{
+                margin: 0,
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                color: '#1f2937'
+              }}>Legend</h4>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <img 
+                src={legendUrl} 
+                alt="Legend" 
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  display: 'block'
+                }}
+                onError={(e) => {
+                  console.error('Failed to load legend image:', legendUrl);
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
       {/* Layer Control Panel */}
       <div style={{
         position: 'absolute',

@@ -31,7 +31,6 @@ import { createJob,setSelectedJob } from '../../actions/jobsActions';
 import { getUserData } from "../../utility/Utils";
 import JobDetailsComponent from '../job/JobDetailsComponent';
 import ProcessingTaskComponent from '../processingbox/ProcessingTaskComponent';
-import ModuleComponent from '../module/ModuleComponent';
 import JobListComponent from '../job/JobListComponent'; // Import the JobListComponent
 import { useSelector } from 'react-redux';
 
@@ -93,17 +92,14 @@ const WorkspaceComponent = () => {
                 ) : (
                     <>
                         <Tabs value={tabValue} onChange={handleTabChange}>
-                            <Tab label="Module" />
+                           
                             <Tab label="Processing Task" />
                             <Tab label="Job List" />
                         </Tabs>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                {tabValue === 0 && ( // Show ProcessingTaskComponent when first tab is selected
-                                    
-                                    <ModuleComponent onTabChange={handleTabChange} />
-                                )}
-                                {tabValue === 1 && ( // Show JobListComponent when second tab is selected
+                            
+                                {tabValue === 0 && ( // Show JobListComponent when second tab is selected
                                     <ProcessingTaskComponent
                                     dataDropItem={dataDropItem}
                                     setdataDropItem={setdataDropItem}
@@ -114,7 +110,7 @@ const WorkspaceComponent = () => {
                                     onSubmit={handleSubmit}
                                 />
                                 )}
-                                {tabValue === 2 && ( // Show JobListComponent when second tab is selected
+                                {tabValue === 1 && ( // Show JobListComponent when second tab is selected
                                     <JobListComponent />
                                 )}
                             </Grid>

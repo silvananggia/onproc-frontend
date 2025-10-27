@@ -62,6 +62,9 @@ function Header() {
         <a href="/katalog-modul" className="nav-item">
           Katalog Modul
         </a>
+        <a href="https://cms-geomimo-prototype.brin.go.id/" className="nav-item">
+          Infografis
+        </a>
         <a href="/tentang" className="nav-item">
           Tentang Kami
         </a>
