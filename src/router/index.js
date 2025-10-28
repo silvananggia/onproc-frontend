@@ -23,6 +23,8 @@ const InfoRawanSawah = lazy(() => import('../components/frame/RawanSawah/InfoRaw
 
 const MapWorkspace = lazy(() => import('../components/mapWorkspace/MapWorkspace'));
 const IndeksPenanamanPadi = lazy(() => import('../components/frame/indekspertanaman/Maps'));
+const Infografis = lazy(() => import('../components/frame/Infografis'));
+
 const PublicRoute = ({ children }) => {
     const user = JSON.parse(localStorage.getItem("user"));
     const userRole = user ? user.role : null;
@@ -123,6 +125,11 @@ function MyRouter() {
                 </Suspense>
             } />
 
+            <Route path='/infografis' element={
+                <Suspense fallback={<Loading />}>
+                    <Infografis />
+                </Suspense>
+            } />   
         </Routes>
     );
 }
