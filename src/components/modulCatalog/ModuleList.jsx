@@ -63,7 +63,16 @@ function ModuleList() {
         "Informasi Rawan Banjir dan Kering Lahan Sawah merupakan informasi spasial yang diperoleh dari hasil ekstraksi citra Terra-MODIS",
       datasets: "Terra-MODIS",
       iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/18be0e4c2c7964d619cb063d3b64f0f6fad52187?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
-      }
+      },
+    {
+      id: 7,
+      title: "Informasi Tanggap Darurat Bencana",
+      url: "https://spectra.brin.go.id",
+      description:
+        "Informasi Tanggap Darurat Bencana merupakan informasi spasial yang diperoleh dari hasil ekstraksi citra High Resolution Satellite",
+      datasets: "High Resolution Satellite",
+      iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/18be0e4c2c7964d619cb063d3b64f0f6fad52187?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
+    }
   ];
 
   return (
