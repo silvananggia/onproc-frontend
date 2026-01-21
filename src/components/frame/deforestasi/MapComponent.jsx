@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import Map from "./Map";
 import GeolocationButton from "./GeolocationButton";
 import BasemapSelect from "./BasemapSelect";
+import "./Map.scss";
 
 
 const MapComponent = ({ bbox, selectedItem, collectionId, onAoiChange, isWorkspaceVisible, toggleWorkspace }) => {

@@ -30,6 +30,15 @@ function ModuleList() {
     },
     {
       id: 3,
+      title: "Deforestasi",
+      url: "/info-deforestasi",
+      description:
+        "Informasi deforestasi di Sumatera, Kalimantan, Sulawesi, dan Papua pada periode tahun 2023-2024 serta tahun 2024-2025. Analisis dilakukan menggunakan data citra satelit untuk memantau perubahan tutupan hutan di wilayah-wilayah tersebut.",
+      datasets: "Landsat",
+      iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/9e0eb0f166f711be45824a1ac1e055d497412cc7?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
+    },
+    {
+      id: 4,
       title: "Zona Potensi Penangkapan Ikan",
       url: "/info-zppi",
       description:
@@ -37,7 +46,7 @@ function ModuleList() {
       datasets: "Modis, VIIRS",
       iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/18be0e4c2c7964d619cb063d3b64f0f6fad52187?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
     },    {
-      id: 4,
+      id: 5,
       title: "Indeks Penanaman Padi (Akses Terbatas)",
       subtitle: user ? "":"(Akses Memerlukan Login)",
       url: user ? "/map-pangan" : "/signin-app",
@@ -47,7 +56,7 @@ function ModuleList() {
       iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/26d491c1fe71ad3856bc02054b6aae605efec76a?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
     },
     {
-      id: 5,
+      id: 6,
       title: "Indeks Penanaman Padi  ",
       url: "/indeks-penanaman-padi" ,
       description:
@@ -56,7 +65,7 @@ function ModuleList() {
       iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/26d491c1fe71ad3856bc02054b6aae605efec76a?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
     },
     {
-      id: 6,
+      id: 7,
       title: "Rawan Banjir dan Kering Lahan Sawah",
       url: "/info-rawan-sawah",
       description:
@@ -65,7 +74,7 @@ function ModuleList() {
       iconUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/18be0e4c2c7964d619cb063d3b64f0f6fad52187?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e",
       },
     {
-      id: 7,
+      id: 8,
       title: "Informasi Tanggap Darurat Bencana",
       url: "https://spectra.brin.go.id",
       description:

@@ -21,7 +21,7 @@ const InfoFasePadi = lazy(() => import('../components/frame/InfoFasePadi'));
 const InfoZPPI = lazy(() => import('../components/frame/ZPPI/InfoZPPI'));
 const InfoTunafinder = lazy(() => import('../components/frame/tunafinder/InfoTunafinder'));
 const InfoRawanSawah = lazy(() => import('../components/frame/RawanSawah/InfoRawanSawah'));
-const infoDeforestasi = lazy(() => import('../components/frame/deforestasi/Maps'));
+const InfoDeforestasi = lazy(() => import('../components/frame/deforestasi/Maps'));
 const MapWorkspace = lazy(() => import('../components/mapWorkspace/MapWorkspace'));
 const IndeksPenanamanPadi = lazy(() => import('../components/frame/indekspertanaman/Maps'));
 const Infografis = lazy(() => import('../components/frame/Infografis'));
@@ -114,7 +114,7 @@ function MyRouter() {
             } />
             <Route path='/info-deforestasi' element={
                 <Suspense fallback={<Loading />}>
-                    <infoDeforestasi />
+                    <InfoDeforestasi />
                 </Suspense>
             } />
             <Route path='/info-zppi' element={
