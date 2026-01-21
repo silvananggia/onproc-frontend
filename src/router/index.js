@@ -19,8 +19,9 @@ const InfoHotspot = lazy(() => import('../components/frame/hotspot/InfoHotspot')
 const InfoDevegetasi = lazy(() => import('../components/frame/InfoDevegetasi'));
 const InfoFasePadi = lazy(() => import('../components/frame/InfoFasePadi'));
 const InfoZPPI = lazy(() => import('../components/frame/ZPPI/InfoZPPI'));
+const InfoTunafinder = lazy(() => import('../components/frame/tunafinder/InfoTunafinder'));
 const InfoRawanSawah = lazy(() => import('../components/frame/RawanSawah/InfoRawanSawah'));
-
+const infoDeforestasi = lazy(() => import('../components/frame/deforestasi/Maps'));
 const MapWorkspace = lazy(() => import('../components/mapWorkspace/MapWorkspace'));
 const IndeksPenanamanPadi = lazy(() => import('../components/frame/indekspertanaman/Maps'));
 const Infografis = lazy(() => import('../components/frame/Infografis'));
@@ -111,12 +112,21 @@ function MyRouter() {
                     <IndeksPenanamanPadi />
                 </Suspense>
             } />
+            <Route path='/info-deforestasi' element={
+                <Suspense fallback={<Loading />}>
+                    <infoDeforestasi />
+                </Suspense>
+            } />
             <Route path='/info-zppi' element={
                 <Suspense fallback={<Loading />}>
                     <InfoZPPI />
                 </Suspense>
             } />
-
+            <Route path='/info-tunafinder' element={
+                <Suspense fallback={<Loading />}>
+                    <InfoTunafinder />
+                </Suspense>
+            } />
             <Route path='/map-pangan' element={
                 <Suspense fallback={<Loading />}>
                     <PublicRoute>
