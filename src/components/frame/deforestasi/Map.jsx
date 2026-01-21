@@ -246,6 +246,14 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef }) => {
           let content = '<div style="max-height: 300px; overflow-y: auto;">';
           let hasData = false;
 
+          // Mapping interpretasi nilai deforestasi
+          const deforestasiInterpretation = {
+            '11': 'Hutan tetap hutan',
+            '12': 'Deforestasi',
+            '21': 'Deforestasi',
+            '22': 'Tetap nonforest'
+          };
+
           responses.forEach((response, index) => {
             if (response && response.data && response.data.features && response.data.features.length > 0) {
               hasData = true;
@@ -257,7 +265,14 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef }) => {
               
               for (const key in props) {
                 if (props[key] !== null && props[key] !== undefined) {
-                  content += `<b>${key}:</b> ${props[key]}<br/>`;
+                  const value = props[key];
+                  const interpretation = deforestasiInterpretation[value.toString()];
+                  
+                  content += `<b>${key}:</b> ${value}`;
+                  if (interpretation) {
+                    content += ` <span style="color: #666; font-style: italic;">(${interpretation})</span>`;
+                  }
+                  content += '<br/>';
                 }
               }
               content += '</div>';
