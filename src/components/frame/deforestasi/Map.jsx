@@ -20,14 +20,9 @@ import { Circle as CircleStyle } from 'ol/style';
 
 // Layer configuration for Deforestasi
 const DEFORESTASI_LAYERS = [
-  { id: 'kalimantan_2324', name: 'Deforestasi Kalimantan 2023-2024', layer: 'geomimo:Deforestasi_Kalimantan_2324', region: 'Kalimantan', period: '2023-2024' },
-  { id: 'kalimantan_2425', name: 'Deforestasi Kalimantan 2024-2025', layer: 'geomimo:Deforestasi_Kalimantan_2425', region: 'Kalimantan', period: '2024-2025' },
-  { id: 'papua_2324', name: 'Deforestasi Papua 2023-2024', layer: 'geomimo:Deforestasi_Papua_2324', region: 'Papua', period: '2023-2024' },
-  { id: 'papua_2425', name: 'Deforestasi Papua 2024-2025', layer: 'geomimo:Deforestasi_Papua_2425', region: 'Papua', period: '2024-2025' },
-  { id: 'sulawesi_2324', name: 'Deforestasi Sulawesi 2023-2024', layer: 'geomimo:Deforestasi_Sulawesi_2324', region: 'Sulawesi', period: '2023-2024' },
-  { id: 'sulawesi_2425', name: 'Deforestasi Sulawesi 2024-2025', layer: 'geomimo:Deforestasi_Sulawesi_2425', region: 'Sulawesi', period: '2024-2025' },
-  { id: 'sumatera_2324', name: 'Deforestasi Sumatera 2023-2024', layer: 'geomimo:Deforestasi_Sumatera_2324', region: 'Sumatera', period: '2023-2024' },
-  { id: 'sumatera_2425', name: 'Deforestasi Sumatera 2024-2025', layer: 'geomimo:Deforestasi_Sumatera_2425', region: 'Sumatera', period: '2024-2025' },
+  { id: 'deforestasi_2324', name: 'Deforestasi 2023-2024', layer: 'geomimo:Deforestasi_2324', period: '2023-2024' },
+  { id: 'deforestasi_2425', name: 'Deforestasi 2024-2025', layer: 'geomimo:Deforestasi_2425', period: '2024-2025' },
+
 ];
 
 // Region center coordinates for zooming
@@ -168,6 +163,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef }) => {
         popupCloser.id = 'popup-closer-deforestasi';
         popupCloser.href = '#';
         popupCloser.className = 'ol-popup-closer';
+        popupCloser.innerHTML = '×'; // Add close icon
         popupContainer.appendChild(popupCloser);
         popupContainer.appendChild(popupContent);
         document.body.appendChild(popupContainer);
@@ -250,7 +246,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef }) => {
           const deforestasiInterpretation = {
             '11': 'Hutan tetap hutan',
             '12': 'Deforestasi',
-            '21': 'Deforestasi',
+            '21': 'Reforestasi',
             '22': 'Tetap nonforest'
           };
 
@@ -445,27 +441,7 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef }) => {
         
         {isLayerPanelOpen && (
           <>
-            {/* Region Filter */}
-            <div style={{ marginBottom: 12 }}>
-              <label style={{ fontSize: '12px', fontWeight: 500 }}>Filter Wilayah:</label>
-              <select 
-                value={selectedRegion}
-                onChange={(e) => setSelectedRegion(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '5px',
-                  marginTop: '4px',
-                  borderRadius: '4px',
-                  border: '1px solid #ccc'
-                }}
-              >
-                {regions.map(region => (
-                  <option key={region} value={region}>
-                    {region === 'all' ? 'Semua Wilayah' : region}
-                  </option>
-                ))}
-              </select>
-            </div>
+
 
             {/* Quick Zoom Buttons */}
             <div style={{ marginBottom: 12 }}>
@@ -527,4 +503,4 @@ const BaseMapComponent = ({ map, setMap, vectorLayerRef }) => {
 export default BaseMapComponent;
 
 // Add popup CSS
-document.head.insertAdjacentHTML('beforeend', `<style>.ol-popup{position:absolute;background:white;-webkit-filter:drop-shadow(0 1px 4px rgba(0,0,0,0.2));filter:drop-shadow(0 1px 4px rgba(0,0,0,0.2));padding:15px;border-radius:10px;border:1px solid #cccccc;bottom:12px;left:-50px;min-width:200px;max-width:350px}.ol-popup:after,.ol-popup:before{top:100%;border:solid transparent;content:" ";height:0;width:0;position:absolute;pointer-events:none}.ol-popup:after{border-top-color:white;border-width:10px;left:48px;margin-left:-10px}.ol-popup-closer{text-decoration:none;position:absolute;top:2px;right:8px;font-size:16px}</style>`);
+document.head.insertAdjacentHTML('beforeend', `<style>.ol-popup{position:absolute;background:white;-webkit-filter:drop-shadow(0 1px 4px rgba(0,0,0,0.2));filter:drop-shadow(0 1px 4px rgba(0,0,0,0.2));padding:15px;border-radius:10px;border:1px solid #cccccc;bottom:12px;left:-50px;min-width:200px;max-width:350px}.ol-popup:after,.ol-popup:before{top:100%;border:solid transparent;content:" ";height:0;width:0;position:absolute;pointer-events:none}.ol-popup:after{border-top-color:white;border-width:10px;left:48px;margin-left:-10px}.ol-popup-closer{text-decoration:none;position:absolute;top:5px;right:8px;font-size:24px;font-weight:bold;color:#666;cursor:pointer;line-height:1;transition:color 0.2s}.ol-popup-closer:hover{color:#d32f2f}</style>`);
