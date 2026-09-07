@@ -134,7 +134,6 @@ function MyRouter() {
                     </PublicRoute>
                 </Suspense>
             } />
-
             <Route path='/infografis' element={
                 <Suspense fallback={<Loading />}>
                     <Infografis />
