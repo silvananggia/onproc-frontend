@@ -7,7 +7,7 @@ function InfoRasterPage({ productId }) {
     <main className="info-page">
       <Header />
       <div className="info-map-area">
-        <CogMap productId={productId} />
+        <CogMap key={productId} productId={productId} />
       </div>
       <style jsx>{`
         .info-page {

@@ -1,14 +1,47 @@
 const TILE_BASE =
   "https://geomimo-prototype.brin.go.id/tiles/cog/tiles/WebMercatorQuad/{z}/{x}/{y}.png";
+const TILEJSON_BASE =
+  "https://geomimo-prototype.brin.go.id/tiles/cog/WebMercatorQuad/tilejson.json";
 
-const CLASS_COLORMAP = {
+const CO2_COLORMAP = {
   0: [0, 0, 0, 0],
-  1: [255, 255, 178, 255],
-  2: [254, 204, 92, 255],
-  3: [253, 141, 60, 255],
-  4: [240, 59, 32, 255],
-  5: [189, 0, 38, 255],
+  1: [43, 131, 186, 255],
+  2: [171, 221, 164, 255],
+  3: [255, 255, 191, 255],
+  4: [253, 174, 97, 255],
+  5: [215, 25, 28, 255],
 };
+
+const CO2_LEGEND_ITEMS = [
+  { color: "rgb(43,131,186)", label: "≤ 2.500 ton CO₂/tahun" },
+  { color: "rgb(171,221,164)", label: "2.500 – 7.500" },
+  { color: "rgb(255,255,191)", label: "7.500 – 25.000" },
+  { color: "rgb(253,174,97)", label: "25.000 – 75.000" },
+  { color: "rgb(215,25,28)", label: "> 75.000 ton CO₂/tahun" },
+];
+
+const CH4_COLORMAP = {
+  0: [0, 0, 0, 0],
+  1: [50, 136, 189, 255],
+  2: [102, 194, 165, 255],
+  3: [171, 221, 164, 255],
+  4: [230, 245, 152, 255],
+  5: [254, 224, 139, 255],
+  6: [253, 174, 97, 255],
+  7: [244, 109, 67, 255],
+  8: [213, 62, 79, 255],
+};
+
+const CH4_LEGEND_ITEMS = [
+  { color: "rgb(50,136,189)", label: "≤ 50 mg/Ha/hari" },
+  { color: "rgb(102,194,165)", label: "50 – 100" },
+  { color: "rgb(171,221,164)", label: "100 – 150" },
+  { color: "rgb(230,245,152)", label: "150 – 200" },
+  { color: "rgb(254,224,139)", label: "200 – 250" },
+  { color: "rgb(253,174,97)", label: "250 – 300" },
+  { color: "rgb(244,109,67)", label: "300 – 350" },
+  { color: "rgb(213,62,79)", label: "> 350 mg/Ha/hari" },
+];
 
 const MANGROVE_COLORMAP = {
   0: [0, 0, 0, 0],
@@ -28,9 +61,101 @@ const UMUR_PADI_COLORMAP = {
   7: [0, 109, 44, 255],
   8: [0, 68, 27, 255],
   9: [255, 237, 160, 255],
-  11: [254, 178, 76, 255],
-  12: [253, 141, 60, 255],
-  13: [227, 26, 28, 255],
+  10: [254, 178, 76, 255],
+  11: [189, 189, 189, 255],
+  12: [255, 196, 0, 255],
+  13: [158, 202, 225, 255],
+};
+
+const MONTHS_ID = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mei",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+];
+
+const UMUR_PADI_FIXED_PERIODS = [
+  [1, 1, 1, 12],
+  [1, 13, 1, 24],
+  [1, 25, 2, 5],
+  [2, 6, 2, 12],
+  [2, 13, 2, 24],
+  [2, 25, 3, 8],
+  [3, 9, 3, 20],
+  [3, 21, 4, 1],
+  [4, 2, 4, 12],
+  [4, 13, 4, 24],
+  [4, 25, 5, 6],
+  [5, 7, 5, 18],
+];
+
+function formatDayMonth(date) {
+  return `${date.getUTCDate()} ${MONTHS_ID[date.getUTCMonth()]}`;
+}
+
+function formatPeriodRange(start, end, year) {
+  if (start.getUTCMonth() === end.getUTCMonth()) {
+    return `${start.getUTCDate()}–${end.getUTCDate()} ${MONTHS_ID[start.getUTCMonth()]} ${year}`;
+  }
+  return `${formatDayMonth(start)}–${formatDayMonth(end)} ${year}`;
+}
+
+function makePeriod(index, start, end, year) {
+  const rangeLabel = formatPeriodRange(start, end, year);
+  return {
+    value: String(index),
+    label: `${index}. ${rangeLabel}`,
+    rangeLabel,
+  };
+}
+
+function getTwelveDayPeriods(year, fromPeriod = 1) {
+  const endOfYear = new Date(Date.UTC(year, 11, 31));
+  const periods = [];
+
+  UMUR_PADI_FIXED_PERIODS.forEach(([sm, sd, em, ed], i) => {
+    const index = i + 1;
+    if (index < fromPeriod) return;
+    periods.push(
+      makePeriod(
+        index,
+        new Date(Date.UTC(year, sm - 1, sd)),
+        new Date(Date.UTC(year, em - 1, ed)),
+        year
+      )
+    );
+  });
+
+  let index = UMUR_PADI_FIXED_PERIODS.length + 1;
+  let cursor = new Date(Date.UTC(year, 4, 19));
+  while (cursor <= endOfYear) {
+    const periodEnd = new Date(cursor);
+    periodEnd.setUTCDate(periodEnd.getUTCDate() + 11);
+    if (periodEnd > endOfYear) {
+      periodEnd.setTime(endOfYear.getTime());
+    }
+    if (index >= fromPeriod) {
+      periods.push(makePeriod(index, cursor, periodEnd, year));
+    }
+    cursor = new Date(periodEnd);
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+    index += 1;
+  }
+
+  return periods;
+}
+
+const UMUR_PADI_PERIODS = {
+  2025: getTwelveDayPeriods(2025, 3),
+  2026: getTwelveDayPeriods(2026),
 };
 
 export function getCogTileUrl({
@@ -54,6 +179,50 @@ export function getCogTileUrl({
     params.set("nodata", String(nodata));
   }
   return `${TILE_BASE}?${params.toString()}`;
+}
+
+export function getCogTileJsonUrl(s3Path) {
+  const params = new URLSearchParams({ url: s3Path });
+  return `${TILEJSON_BASE}?${params.toString()}`;
+}
+
+const POINT_BASE = "https://geomimo-prototype.brin.go.id/tiles/cog/point";
+
+export function getCogPointUrl(lon, lat, s3Path) {
+  const params = new URLSearchParams({ url: s3Path });
+  return `${POINT_BASE}/${lon},${lat}?${params.toString()}`;
+}
+
+export function describeCogValue(raw, layerConfig, config) {
+  const num = Number(raw);
+  if (raw === null || raw === undefined || !Number.isFinite(num) || Math.abs(num) > 1e30) {
+    return { valueLabel: "Tidak ada data", classLabel: null, color: null };
+  }
+
+  if (layerConfig?.legendGradient) {
+    const digits = Math.abs(num) >= 1 ? 2 : 4;
+    return {
+      valueLabel: `${num.toFixed(digits)}`,
+      classLabel: layerConfig.legendTitle || "Nilai raster",
+      color: null,
+    };
+  }
+
+  const klass = Math.round(num);
+  if (klass === 0) {
+    return { valueLabel: "Tidak ada data", classLabel: null, color: null };
+  }
+
+  const items = layerConfig?.legendItems || config?.legendItems || [];
+  const byIndex = items[klass - 1];
+  const byPrefix = items.find((item) => item.label.trim().startsWith(String(klass)));
+  const item = byPrefix || byIndex;
+
+  return {
+    valueLabel: String(klass),
+    classLabel: item?.label || `Kelas ${klass}`,
+    color: item?.color || null,
+  };
 }
 
 export const PRODUCT_CONFIGS = {
@@ -98,33 +267,29 @@ export const PRODUCT_CONFIGS = {
       if (layerType === "paddy") {
         return {
           s3Path: `s3://cog/ch4/paddy/${year}/ch4class_evi2_jawabali_${year}_cog.tif`,
-          colormap: CLASS_COLORMAP,
+          colormap: CH4_COLORMAP,
           nodata: 0,
           zoom: 7,
           centerLonLat: [110.7, -7.0],
-          legendTitle: "Kelas emisi CH4",
+          legendTitle: "Emisi CH₄ rata-rata harian (mg/Ha/hari)",
+          legendItems: CH4_LEGEND_ITEMS,
           description:
-            "Klasifikasi emisi metana dari lahan sawah Jawa-Bali berbasis EVI2.",
+            "Klasifikasi emisi metana lahan sawah Jawa-Bali berbasis EVI2. Ambang: 50, 100, 150, 200, 250, 300, dan 350 mg/Ha/hari.",
         };
       }
       return {
         s3Path: `s3://cog/ch4/co2/${year}/odiac2024_co2class_indonesia_${year}_cog.tif`,
-        colormap: CLASS_COLORMAP,
+        colormap: CO2_COLORMAP,
         nodata: 0,
-        zoom: 5,
+        zoom: 6,
         centerLonLat: [118, -2.5],
-        legendTitle: "Kelas emisi CO2",
+        legendTitle: "Emisi CO₂ tahunan (ton)",
+        legendItems: CO2_LEGEND_ITEMS,
         description:
-          "Klasifikasi emisi CO2 ODIAC 2024 untuk wilayah Indonesia.",
+          "Klasifikasi emisi CO₂ tahunan ODIAC 2024 (tonne CO₂) untuk wilayah Indonesia. Ambang nasional: 2.500, 7.500, 25.000, dan 75.000 ton.",
       };
     },
-    legendItems: [
-      { color: "rgb(255,255,178)", label: "Kelas 1 (rendah)" },
-      { color: "rgb(254,204,92)", label: "Kelas 2" },
-      { color: "rgb(253,141,60)", label: "Kelas 3" },
-      { color: "rgb(240,59,32)", label: "Kelas 4" },
-      { color: "rgb(189,0,38)", label: "Kelas 5 (tinggi)" },
-    ],
+    legendItems: CO2_LEGEND_ITEMS,
   },
 
   mangrove: {
@@ -173,9 +338,9 @@ export const PRODUCT_CONFIGS = {
       };
     },
     legendItems: [
-      { color: "rgb(255,237,160)", label: "Alert baru" },
-      { color: "rgb(254,178,76)", label: "Alert berulang" },
-      { color: "rgb(227,26,28)", label: "Deforestasi terkonfirmasi" },
+      { color: "rgb(255,237,160)", label: "1 Warning" },
+      { color: "rgb(254,178,76)", label: "2 Alert" },
+      { color: "rgb(227,26,28)", label: "3 High alert" },
     ],
   },
 
@@ -275,46 +440,42 @@ export const PRODUCT_CONFIGS = {
         ],
       },
       {
-        key: "dekade",
-        label: "Dekade",
+        key: "periode",
+        label: "Periode 12 harian",
         dependsOn: "year",
-        optionsBy: {
-          2025: Array.from({ length: 28 }, (_, i) => {
-            const dekade = i + 3;
-            return { value: String(dekade), label: `Dekade ${dekade}` };
-          }),
-          2026: [
-            { value: "1", label: "Dekade 1" },
-            { value: "2", label: "Dekade 2" },
-          ],
-        },
+        optionsBy: UMUR_PADI_PERIODS,
       },
     ],
-    defaults: { year: "2026", dekade: "2" },
-    getLayer: ({ year, dekade }) => {
+    defaults: { year: "2026", periode: "2" },
+    getLayer: ({ year, periode }) => {
+      const period = (UMUR_PADI_PERIODS[year] || []).find(
+        (item) => item.value === String(periode)
+      );
+      const rangeLabel = period?.rangeLabel || `periode ${periode}`;
       return {
-        s3Path: `s3://cog/umur_padi/${year}/Fase_${year}_${dekade}_cog.tif`,
+        s3Path: `s3://cog/umur_padi/${year}/Fase_${year}_${periode}_cog.tif`,
         colormap: UMUR_PADI_COLORMAP,
         nodata: 0,
         zoom: 5,
         centerLonLat: [118, -2.5],
-        legendTitle: "Kelas umur/fase padi",
-        description: `Informasi fase dan umur padi dekade ${dekade} tahun ${year}.`,
+        legendTitle: "Kelas pertumbuhan padi",
+        description: `Umur padi pada tahun ${year} periode 12 harian ke ${periode}: (${rangeLabel}).`,
       };
     },
     legendItems: [
-      { color: "rgb(237,248,233)", label: "1–10 HST" },
-      { color: "rgb(199,233,192)", label: "11–20 HST" },
-      { color: "rgb(161,217,155)", label: "21–30 HST" },
-      { color: "rgb(116,196,118)", label: "31–40 HST" },
-      { color: "rgb(65,171,93)", label: "41–50 HST" },
-      { color: "rgb(35,139,69)", label: "51–60 HST" },
-      { color: "rgb(0,109,44)", label: "61–70 HST" },
-      { color: "rgb(0,68,27)", label: "71–80 HST" },
-      { color: "rgb(255,237,160)", label: "81–90 HST" },
-      { color: "rgb(254,178,76)", label: "91–100 HST" },
-      { color: "rgb(253,141,60)", label: "101–110 HST" },
-      { color: "rgb(227,26,28)", label: ">110 HST / panen" },
+      { color: "rgb(237,248,233)", label: "1 Umur 1–12 hari" },
+      { color: "rgb(199,233,192)", label: "2 Umur 13–24 hari" },
+      { color: "rgb(161,217,155)", label: "3 Umur 25–36 hari" },
+      { color: "rgb(116,196,118)", label: "4 Umur 37–48 hari" },
+      { color: "rgb(65,171,93)", label: "5 Umur 49–60 hari" },
+      { color: "rgb(35,139,69)", label: "6 Umur 61–72 hari" },
+      { color: "rgb(0,109,44)", label: "7 Umur 73–84 hari" },
+      { color: "rgb(0,68,27)", label: "8 Umur 85–96 hari" },
+      { color: "rgb(255,237,160)", label: "9 Umur 97–108 hari" },
+      { color: "rgb(254,178,76)", label: "10 Umur 109–120 hari" },
+      { color: "rgb(189,189,189)", label: "11 Bukan padi" },
+      { color: "rgb(255,196,0)", label: "12 Panen" },
+      { color: "rgb(158,202,225)", label: "13 Persiapan tanam" },
     ],
   },
 };

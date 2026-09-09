@@ -191,7 +191,7 @@ export function getCatalogModules(user) {
       title: "Fase Pertumbuhan Padi",
       url: "/info-fase-padi",
       description:
-        "Informasi fase dan umur padi berdasarkan pengolahan data satelit Sentinel-1 per dekade untuk mendukung pemantauan musim tanam dan produktivitas lahan sawah.",
+        "Informasi fase dan umur padi berdasarkan pengolahan data satelit Sentinel-1 per periode 12 harian untuk mendukung pemantauan musim tanam dan produktivitas lahan sawah.",
       datasets: "Sentinel-1",
       datasetTags: ["Sentinel-1"],
       category: "pertanian",
