@@ -1,27 +1,18 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { logout } from "../../actions/authActions";
 import LogoWhite from "../../assets/images/logo/geomimo-logo-white.png";
-
-
 
 function Header() {
   const user = JSON.parse(localStorage.getItem("user"));
   const userEmail = user ? user.name : null;
   const dispatch = useDispatch();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    Swal.mixin({
-      customClass: {
-        confirmButton: "btn btn-success",
-        cancelButton: "btn btn-danger",
-      },
-      buttonsStyling: false,
-    });
-
     Swal.fire({
       title: "Konfirmasi",
       text: "Yakin akan keluar dari GEOMIMO?",
@@ -34,9 +25,6 @@ function Header() {
       if (result.isConfirmed) {
         dispatch(logout());
         navigate("/");
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        // User clicked "No, cancel!" or closed the modal
-        return;
       }
     });
   };
@@ -44,21 +32,32 @@ function Header() {
   return (
     <header className="header">
       <div className="logo-container">
-        <a href="/">
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <img
+        <a href="/" aria-label="Beranda GEOMIMO">
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <img
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/88a098d5d4b157a435fac6b6d5e62152ef2ad8aa?placeholderIfAbsent=true"
-              alt="Logo"
+              alt="Logo BRIN"
               className="logo"
-              
             />
-
-            <img src={LogoWhite} alt="geomimo-logo-white" width={"150px"} style={{ marginLeft: '20px' }}/>
-            
+            <img
+              src={LogoWhite}
+              alt="GEOMIMO"
+              width={"150px"}
+              style={{ marginLeft: "20px" }}
+            />
           </div>
         </a>
       </div>
-      <nav className="navigation">
+      <button
+        type="button"
+        className="menu-toggle"
+        aria-label={menuOpen ? "Tutup menu" : "Buka menu"}
+        aria-expanded={menuOpen}
+        onClick={() => setMenuOpen((open) => !open)}
+      >
+        {menuOpen ? "✕" : "☰"}
+      </button>
+      <nav className={`navigation ${menuOpen ? "open" : ""}`}>
         <a href="/katalog-modul" className="nav-item">
           Katalog Modul
         </a>
@@ -74,9 +73,9 @@ function Header() {
         {userEmail ? (
           <div className="user-info">
             <span>{userEmail}</span>
-            <a className="nav-button" onClick={handleLogout}>
+            <button type="button" className="nav-button" onClick={handleLogout}>
               Logout
-            </a>
+            </button>
           </div>
         ) : (
           <>
@@ -94,8 +93,10 @@ function Header() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 21px 40px;
+          padding: 10px var(--page-pad-x);
           background-color: #205072;
+          position: relative;
+          z-index: 20;
         }
 
         .logo {
@@ -103,38 +104,37 @@ function Header() {
           height: 45px;
         }
 
+        .menu-toggle {
+          display: none;
+          background: none;
+          border: none;
+          color: #f1f1f1;
+          font-size: 28px;
+          cursor: pointer;
+          line-height: 1;
+        }
+
         .navigation {
           display: flex;
-          gap: 20px;
+          gap: 4px;
           align-items: center;
         }
 
         .nav-item {
           font-family: "Lato", sans-serif;
-
           color: #f1f1f1;
           cursor: pointer;
           text-decoration: none;
-          display: flex;
-          padding: var(--button-md-button-vp, 16px)
-            var(--button-md-button-hp, 32px);
-          justify-content: flex-end;
-          align-items: center;
-          gap: var(--button-md-button-hg, 10px);
+          padding: 8px 10px;
         }
 
         .user-info {
           font-family: "Lato", sans-serif;
-
           color: #f1f1f1;
-          cursor: pointer;
-          text-decoration: none;
           display: flex;
-          padding: var(--button-md-button-vp, 16px)
-            var(--button-md-button-hp, 32px);
-          justify-content: flex-end;
+          padding: 8px 16px;
           align-items: center;
-          gap: var(--button-md-button-hg, 10px);
+          gap: 12px;
         }
 
         .nav-button {
@@ -142,22 +142,46 @@ function Header() {
           font-size: 16px;
           color: #205072;
           cursor: pointer;
-          padding: 16px 32px;
+          padding: 8px 20px;
           border-radius: 8px;
           background-color: #f1f1f1;
           text-decoration: none;
+          border: none;
         }
 
         @media (max-width: 991px) {
+          .menu-toggle {
+            display: block;
+          }
+
           .navigation {
             display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            flex-direction: column;
+            background: #205072;
+            padding: 16px 24px 24px;
+            align-items: stretch;
+            gap: 8px;
+          }
+
+          .navigation.open {
+            display: flex;
+          }
+
+          .nav-item,
+          .nav-button,
+          .user-info {
+            width: 100%;
+            justify-content: flex-start;
           }
         }
 
         @media (max-width: 640px) {
           .header {
-            flex-direction: column;
-            align-items: flex-start;
+            padding: 10px 16px;
           }
         }
       `}</style>

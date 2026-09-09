@@ -10,16 +10,18 @@ function PernyataanPenafian() {
   return (
     <main className="disclaimer-page">
       <Header />
-      <Breadcrumb
-        items={[
-          { label: "Home", url: "/" },
-          {
-            label: "Pernyataan Penafian",
-            url: "/pernyataan-penafian",
-            active: true,
-          },
-        ]}
-      />
+      <div className="page-chrome">
+        <Breadcrumb
+          items={[
+            { label: "Home", url: "/" },
+            {
+              label: "Pernyataan Penafian",
+              url: "/pernyataan-penafian",
+              active: true,
+            },
+          ]}
+        />
+      </div>
       <Banner
         title="Pernyataan Penafian"
         subtitle="Update terbaru: April 2025"
@@ -104,6 +106,10 @@ function PernyataanPenafian() {
       <Footer />
 
       <style jsx>{`
+        .page-chrome {
+          padding: 0 var(--page-pad-x);
+        }
+
         .disclaimer-page {
           background-color: #ffffff;
           flex-direction: column;
@@ -113,51 +119,52 @@ function PernyataanPenafian() {
         }
 
         .disclaimer-navigation {
-          margin-top: 88px;
+          margin-top: 24px;
           width: 100%;
           font-family: Lato, sans-serif;
-          font-size: 24px;
+          font-size: 16px;
           color: #205072;
           font-weight: 500;
           letter-spacing: 0px;
-          line-height: 32px;
-          padding:0 40px;
+          line-height: 1.4;
+          padding: 0 var(--page-pad-x);
         }
 
         .navigation-row {
           display: flex;
           width: 100%;
           align-items: center;
+          gap: 12px;
           justify-content: space-between;
           flex-wrap: wrap;
         }
 
         .navigation-link {
-          align-self: stretch;
-          width: 680px;
+          flex: 1 1 280px;
+          width: auto;
           background-color: #f1f1f1;
           border: 1px solid #202020;
-          min-width: 240px;
-          margin-top: auto;
-          margin-bottom: auto;
-          padding: 11px 48px;
+          min-width: 0;
+          margin: 0;
+          padding: 10px 16px;
           display: flex;
           align-items: center;
           text-decoration: none;
           color: inherit;
-          font-size: 24px;
+          font-size: 16px;
         }
 
         .navigation-link-wide {
-          align-self: stretch;
-          width: 680px;
+          flex: 1 1 280px;
+          width: auto;
           background-color: #f1f1f1;
           border: 1px solid #202020;
-          min-height: 54px;
+          min-height: 0;
           max-width: 100%;
-          padding: 11px 48px;
+          padding: 10px 16px;
           display: flex;
           align-items: center;
+          margin-top: 12px;
         }
 
         .email-link {
@@ -168,7 +175,7 @@ function PernyataanPenafian() {
         @media (max-width: 991px) {
           .disclaimer-navigation {
             max-width: 100%;
-            margin-top: 40px;
+            margin-top: 16px;
           }
 
           .navigation-row {

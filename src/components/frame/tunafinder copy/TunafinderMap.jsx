@@ -12,7 +12,6 @@ import Fill from "ol/style/Fill";
 import Stroke from "ol/style/Stroke";
 import "ol/ol.css";
 import "./TunafinderMap.css";
-import BasemapToggle from "../../map/BasemapToggle";
 import {
   Box,
   FormControl,
@@ -24,6 +23,7 @@ import {
   Typography,
   FormControlLabel,
   Switch,
+  Button,
   Checkbox,
   FormGroup,
 } from '@mui/material';
@@ -71,8 +71,7 @@ export default function TunafinderMap() {
     const baseLayer = new TileLayer({
       title: "Basemap",
       source: new XYZ({ 
-        url: "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
-        attributions: "&copy; <a href='https://www.esri.com/'>Esri</a>",
+        url: "https://abcd.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
       }),
     });
 
@@ -323,14 +322,13 @@ export default function TunafinderMap() {
   return (
     <div className="tunafinder-map-container">
       <div id="tunafinder-map" className="map-container"></div>
-      {map && <BasemapToggle map={map} />}
 
       {/* Filter Form - Top Left */}
       <div style={{
         position: 'absolute',
         top: '10px',
         left: '40px',
-        width: 'min(400px, calc(100% - 56px))',
+        width: '400px',
         zIndex: 1000,
         maxHeight: '90vh',
         overflowY: 'auto'
@@ -338,7 +336,7 @@ export default function TunafinderMap() {
         <Paper elevation={3} sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
           <Typography variant="h6" gutterBottom>
             <MapIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-            Filter Tuna Finder
+            Tuna Finder Filter
           </Typography>
           
           <Grid container spacing={2}>
@@ -346,7 +344,7 @@ export default function TunafinderMap() {
             <Grid item xs={12}>
               <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                 <LayersIcon sx={{ mr: 0.5, fontSize: '1rem' }} />
-                Layer Peta
+                Layer Control
               </Typography>
               <FormControlLabel
                 control={
@@ -386,11 +384,11 @@ export default function TunafinderMap() {
             <Grid item xs={12}>
               <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                 <DateRangeIcon sx={{ mr: 0.5, fontSize: '1rem' }} />
-                Rentang Tanggal
+                Date Range
               </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Tanggal Mulai"
+                  label="Tanggal Start"
                   value={filterParams.tanggal_start ? dayjs(filterParams.tanggal_start) : null}
                   onChange={handleDateChange('tanggal_start')}
                   slotProps={{ textField: { fullWidth: true, size: 'small' } }}
@@ -401,7 +399,7 @@ export default function TunafinderMap() {
             <Grid item xs={12}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Tanggal Selesai"
+                  label="Tanggal End"
                   value={filterParams.tanggal_end ? dayjs(filterParams.tanggal_end) : null}
                   onChange={handleDateChange('tanggal_end')}
                   slotProps={{ textField: { fullWidth: true, size: 'small' } }}
@@ -417,18 +415,18 @@ export default function TunafinderMap() {
               </Typography>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  label="Tanggal HSI"
+                  label="HSI Date"
                   value={filterParams.hsi_date ? dayjs(filterParams.hsi_date, 'YYYYMMDD') : null}
                   onChange={handleHSIDateChange}
                   slotProps={{ textField: { fullWidth: true, size: 'small', sx: { mb: 1 } } }}
                 />
               </LocalizationProvider>
               <FormControl fullWidth size="small">
-                <InputLabel>Spesies HSI</InputLabel>
+                <InputLabel>HSI Species</InputLabel>
                 <Select
                   value={filterParams.hsi_spesies}
                   onChange={handleFilterChange('hsi_spesies')}
-                  label="Spesies HSI"
+                  label="HSI Species"
                 >
                   <MenuItem value="ALB">ALB (Albacore)</MenuItem>
                   <MenuItem value="BET">BET (Bigeye Tuna)</MenuItem>
@@ -442,7 +440,7 @@ export default function TunafinderMap() {
             <Grid item xs={12}>
               <Typography variant="subtitle2" sx={{ mb: 1, display: 'flex', alignItems: 'center' }}>
                 <LocationOnIcon sx={{ mr: 0.5, fontSize: '1rem' }} />
-                Parameter Filter
+                Filter Parameters
               </Typography>
               <FormControl fullWidth size="small">
                 <InputLabel>Kategori</InputLabel>
@@ -513,42 +511,42 @@ export default function TunafinderMap() {
         position: 'absolute',
         bottom: '20px',
         right: '20px',
-        width: 'min(300px, calc(100% - 24px))',
+        width: '300px',
         zIndex: 1000
       }}>
         <Paper elevation={3} sx={{ p: 2, backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
           <Typography variant="h6" gutterBottom sx={{ fontSize: '1rem', display: 'flex', alignItems: 'center' }}>
             <ScienceIcon sx={{ mr: 0.5 }} />
-            Informasi Layer
+            Layer Info
           </Typography>
           <Box sx={{ fontSize: '0.85rem' }}>
             {layerVisibility.hsi && (
               <Box sx={{ mb: 1, p: 1, bgcolor: 'rgba(25, 118, 210, 0.1)', borderRadius: 1 }}>
-                <strong>HSI:</strong> Indeks Kesesuaian Habitat<br />
+                <strong>HSI:</strong> Habitat Suitability Index<br />
                 <small>
-                  Spesies: {filterParams.hsi_spesies} | Tanggal: {filterParams.hsi_date}
+                  Species: {filterParams.hsi_spesies} | Date: {filterParams.hsi_date}
                 </small>
               </Box>
             )}
             {layerVisibility.area && (
               <Box sx={{ mb: 1, p: 1, bgcolor: 'rgba(76, 175, 80, 0.1)', borderRadius: 1 }}>
-                <strong>Area Tangkap:</strong> Visualisasi area tangkapan<br />
+                <strong>Area Tangkap:</strong> Catch area visualization<br />
                 <small>
-                  Spesies: {Array.isArray(filterParams.spesies) ? filterParams.spesies.join(', ') : filterParams.spesies}
+                  Species: {Array.isArray(filterParams.spesies) ? filterParams.spesies.join(', ') : filterParams.spesies}
                 </small>
               </Box>
             )}
             {layerVisibility.titik && (
               <Box sx={{ mb: 1, p: 1, bgcolor: 'rgba(255, 152, 0, 0.1)', borderRadius: 1 }}>
-                <strong>Titik Tangkap:</strong> Lokasi titik tangkapan<br />
+                <strong>Titik Tangkap:</strong> Catch point locations<br />
                 <small>
-                  Spesies: {Array.isArray(filterParams.spesies) ? filterParams.spesies.join(', ') : filterParams.spesies}
+                  Species: {Array.isArray(filterParams.spesies) ? filterParams.spesies.join(', ') : filterParams.spesies}
                 </small>
               </Box>
             )}
             {!layerVisibility.hsi && !layerVisibility.area && !layerVisibility.titik && (
               <Typography variant="body2" color="text.secondary">
-                Aktifkan layer untuk melihat informasi
+                Enable layers to see information
               </Typography>
             )}
           </Box>

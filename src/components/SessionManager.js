@@ -6,15 +6,18 @@ export default function SessionManager() {
   const navigate = useNavigate();
 
   const handleOnIdle = () => {
+    const user = localStorage.getItem('user');
+    if (!user) return;
+
     localStorage.removeItem('user');
-/*     Swal.fire({
+    Swal.fire({
       title: 'Sesi Berakhir',
       text: 'Sesi Anda telah berakhir karena tidak aktif.',
       icon: 'warning',
       confirmButtonText: 'OK'
     }).then(() => {
-      navigate('/login');
-    }); */
+      navigate('/signin-app');
+    });
   };
 
   useIdleTimer({

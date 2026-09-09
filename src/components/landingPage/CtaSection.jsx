@@ -1,97 +1,88 @@
 import React from "react";
 
-
-
 function CtaSection() {
   return (
     <section className="cta-section">
-      <h2 className="cta-title">Siap Untuk Mencoba GEOMIMO?</h2>
-      <p className="cta-description">
-        Mulai jelajahi GEOMIMO atau hubungi kami untuk informasi lebih lanjut
-      </p>
-      <div className="cta-buttons">
-        <a href="/kontak" className="cta-button-primary">
-          Hubungi Kami
-        </a>
-        <a href="/katalog-modul" className="cta-button-secondary">
-          Jelajahi GEOMIMO
-        </a>
+      <div className="cta-inner">
+        <h2 className="cta-title">Siap mencoba GEOMIMO?</h2>
+        <p className="cta-description">
+          Mulai jelajahi katalog modul atau hubungi kami untuk kolaborasi dan
+          informasi lebih lanjut.
+        </p>
+        <div className="cta-buttons">
+          <a href="/katalog-modul" className="cta-button-primary">
+            Jelajahi GEOMIMO
+          </a>
+          <a href="/kontak" className="cta-button-secondary">
+            Hubungi Kami
+          </a>
+        </div>
       </div>
       <style jsx>{`
         .cta-section {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          padding: 64px 0;
-          background-image: url("https://cdn.builder.io/api/v1/image/assets/TEMP/4f5e1d623f818fd5ff76ee12827605d1c549c146?placeholderIfAbsent=true");
+          padding: var(--page-pad-y) var(--page-pad-x);
+          background:
+            linear-gradient(180deg, rgba(32, 80, 114, 0.82), rgba(50, 144, 156, 0.88)),
+            url("https://cdn.builder.io/api/v1/image/assets/TEMP/4f5e1d623f818fd5ff76ee12827605d1c549c146?placeholderIfAbsent=true");
           background-size: cover;
           background-position: center;
         }
 
-        .cta-title {
-          font-size: 48px;
-          font-weight: 700;
+        .cta-inner {
+          max-width: 760px;
+          margin: 0 auto;
           text-align: center;
-          background: linear-gradient(90deg, #81883a 62.63%, #32c596 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          margin: 0;
+        }
+
+        .cta-title {
+          font-size: 28px;
+          font-weight: 800;
+          color: #fff;
+          margin: 0 0 8px;
         }
 
         .cta-description {
-          font-family: "Lato", sans-serif;
-          font-size: 24px;
-          color: #f1f1f1;
-          text-align: center;
-          margin: 20px 0;
-          max-width: 700px;
-          padding: 0 20px;
+          font-size: 16px;
+          color: rgba(255, 255, 255, 0.92);
+          margin: 0 auto 20px;
+          max-width: 620px;
         }
 
         .cta-buttons {
           display: flex;
-          gap: 20px;
-          margin-top: 20px;
+          justify-content: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .cta-button-primary,
+        .cta-button-secondary {
+          padding: 10px 22px;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 700;
+          text-decoration: none;
+          min-width: 160px;
         }
 
         .cta-button-primary {
-          padding: 14px 24px;
-          border-radius: 8px;
-          font-size: 14px;
-          cursor: pointer;
-          color: #f1f1f1;
-          background-color: #32909c;
-          text-decoration: none;
+          color: var(--color-navy);
+          background: #fff;
         }
 
         .cta-button-secondary {
-          padding: 14px 24px;
-          border-radius: 8px;
-          font-size: 14px;
-          cursor: pointer;
-          border: 2px solid #205072;
-          color: #202020;
-          background-color: #f1f1f1;
-          text-decoration: none;
-        }
-
-        @media (max-width: 991px) {
-          .cta-title {
-            font-size: 36px;
-          }
-
-          .cta-description {
-            font-size: 20px;
-          }
+          color: #fff;
+          border: 2px solid #fff;
         }
 
         @media (max-width: 640px) {
           .cta-title {
-            font-size: 28px;
+            font-size: 22px;
           }
 
-          .cta-description {
-            font-size: 18px;
+          .cta-button-primary,
+          .cta-button-secondary {
+            width: 100%;
           }
         }
       `}</style>

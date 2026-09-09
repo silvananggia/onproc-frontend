@@ -15,29 +15,32 @@ function IntroSection() {
         .intro-section {
           display: flex;
           align-items: center;
-          gap: 40px;
+          gap: 24px;
           width: 100%;
-          background-color: #32909c;
+          padding: 28px var(--page-pad-x);
+          background: linear-gradient(135deg, #205072 0%, #32909c 100%);
         }
           
         .intro-content {
           color: #f1f1f1;
-          font-family: "Avenir LT Std", sans-serif;
-          margin-left: 20px;
+          font-family: var(--font-heading);
           flex: 1;
         }
         .intro-title {
-          font-size: 36px;
-          margin: 0 0 16px 0;
+          font-size: 32px;
+          font-weight: 700;
+          margin: 0 0 8px;
         }
         .intro-description {
-          font-family: "Lato", sans-serif;
-          font-size: 16px;
+          font-family: var(--font-body);
+          font-size: 15px;
+          line-height: 1.55;
           margin: 0;
+          max-width: 560px;
         }
         .intro-image {
           width: auto;
-          height: 350px;
+          height: 220px;
           margin-left: auto;
         }
         @media (max-width: 991px) {
@@ -52,7 +55,7 @@ function IntroSection() {
         }
         @media (max-width: 640px) {
           .intro-section {
-            padding: 40px 16px;
+            padding: 28px 16px;
           }
         }
       `}</style>

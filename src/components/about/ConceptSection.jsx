@@ -18,28 +18,25 @@ function ConceptSection() {
           width: 100%;
           display: flex;
           justify-content: space-between;
-          align-items: center;
-          margin-left:  20px;
+          align-items: flex-start;
+          gap: 24px;
+          padding: 0 var(--page-pad-x);
         }
         .concept-title {
-          font-family: "Avenir LT Std", sans-serif;
-          font-size: 36px;
-          line-height: 48px;
-          font-weight: 600;
+          font-family: var(--font-heading);
+          font-size: 32px;
+          font-weight: 700;
           background: linear-gradient(90deg, #32909c 0%, #32c596 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           margin: 0;
-          display: flex;
-          flex-direction: column;
         }
         .concept-description {
-          font-family: "Lato", sans-serif;
-          font-size: 24px;
-          line-height: 32px;
-          font-weight: 500;
-          color: #202020;
-          width: 880px;
+          font-family: var(--font-body);
+          font-size: 15px;
+          line-height: 1.55;
+          color: var(--color-ink);
+          max-width: 720px;
           margin: 0;
         }
         @media (max-width: 991px) {

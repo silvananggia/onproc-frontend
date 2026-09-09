@@ -1,41 +1,31 @@
 "use client";
 import React from "react";
 import Header from "../../layouts/Header";
-import Breadcrumb from "../../layouts/Breadcrumb";
-
 import Map from "./MapComponent";
 
-function AboutUsPage() {
+function IndeksPenanamanPadiPage() {
   return (
-    <div className="about-page">
+    <div className="info-page">
       <Header />
-      
-      <main className="main-content">
+      <main className="info-map-area">
         <Map />
       </main>
-      
       <style jsx>{`
-
-        .main-content {
-         
+        .info-page {
           display: flex;
           flex-direction: column;
-          align-items: center;
-          gap: 72px;
+          height: 100vh;
+          overflow: hidden;
+          background-color: #ffffff;
         }
-        @media (max-width: 991px) {
-          .main-content {
-            padding: 20px;
-          }
-        }
-        @media (max-width: 640px) {
-          .main-content {
-            padding: 16px;
-          }
+        .info-map-area {
+          flex: 1;
+          min-height: 0;
+          width: 100%;
         }
       `}</style>
     </div>
   );
 }
 
-export default AboutUsPage;
+export default IndeksPenanamanPadiPage;

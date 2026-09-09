@@ -1,29 +1,49 @@
 "use client";
 import React from "react";
 
-function SearchBar() {
+function SearchBar({ value, onChange, onSubmit }) {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (onSubmit) {
+      onSubmit();
+    }
+  };
+
   return (
-    <section className="search-section" aria-label="Search modules">
-      <div className="search-container">
+    <section className="search-section" aria-label="Cari modul">
+      <form className="search-container" onSubmit={handleSubmit}>
         <div className="search-field">
           <div className="search-input-wrapper">
             <div className="search-icon-container">
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ff304e6de55c7504ab5ca64e02d1cc4ac7d87ce3?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e" alt="" className="search-icon-bg" />
-              <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/e12f6fc1d5e24425d7384a1af0601d07b51f5036?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e" alt="" className="search-icon" />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/ff304e6de55c7504ab5ca64e02d1cc4ac7d87ce3?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e"
+                alt=""
+                className="search-icon-bg"
+              />
+              <img
+                src="https://cdn.builder.io/api/v1/image/assets/TEMP/e12f6fc1d5e24425d7384a1af0601d07b51f5036?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e"
+                alt=""
+                className="search-icon"
+              />
             </div>
             <input
-              type="text"
-              placeholder="Cari data"
+              type="search"
+              placeholder="Cari modul, dataset, atau topik"
               className="search-input"
+              value={value}
+              onChange={(event) => onChange(event.target.value)}
+              aria-label="Cari modul"
             />
           </div>
         </div>
-        <button className="search-button">Cari</button>
-      </div>
+        <button type="submit" className="search-button">
+          Cari
+        </button>
+      </form>
 
       <style jsx>{`
         .search-section {
-          margin-bottom: 40px;
+          margin-bottom: 20px;
         }
 
         .search-container {
@@ -41,17 +61,11 @@ function SearchBar() {
         }
 
         .search-field {
-          min-height: 58px;
+          min-height: 48px;
           flex-grow: 1;
           flex-shrink: 0;
           flex-basis: 0;
           width: fit-content;
-        }
-
-        @media (max-width: 991px) {
-          .search-field {
-            max-width: 100%;
-          }
         }
 
         .search-input-wrapper {
@@ -61,31 +75,17 @@ function SearchBar() {
           width: 100%;
           align-items: center;
           gap: 12px;
-          justify-content: center;
-          flex: 1;
-          flex-wrap: wrap;
-          height: 58px;
-        }
-
-        @media (max-width: 991px) {
-          .search-input-wrapper {
-            max-width: 100%;
-          }
+          padding: 0 16px;
+          height: 48px;
         }
 
         .search-icon-container {
           display: flex;
-          flex-direction: column;
-          align-self: stretch;
           position: relative;
-          aspect-ratio: 1;
-          margin-top: auto;
-          margin-bottom: auto;
           width: 24px;
-          padding: 1px;
-          overflow: hidden;
-          align-items: center;
           height: 24px;
+          overflow: hidden;
+          flex-shrink: 0;
         }
 
         .search-icon-bg {
@@ -94,71 +94,53 @@ function SearchBar() {
           height: 100%;
           width: 100%;
           object-fit: cover;
-          object-position: center;
         }
 
         .search-icon {
-          aspect-ratio: 1;
-          object-fit: contain;
-          object-position: center;
           width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
 
         .search-input {
-          align-self: stretch;
-          min-width: 240px;
-          margin-top: auto;
-          margin-bottom: auto;
-          gap: 40px 80px;
           font-family: Lato, sans-serif;
           font-size: 16px;
-          color: #7c7c7c;
+          color: #202020;
           font-weight: 500;
-          letter-spacing: 0px;
-          line-height: 32px;
+          line-height: 1.4;
           flex: 1;
-          flex-shrink: 1;
-          flex-basis: 0%;
           border: none;
           outline: none;
           background: transparent;
+          min-width: 160px;
         }
 
-        @media (max-width: 991px) {
-          .search-input {
-            max-width: 100%;
-          }
+        .search-input::placeholder {
+          color: #7c7c7c;
         }
 
         .search-button {
-          align-self: stretch;
           border-radius: 8px;
-          background-color: rgba(32, 80, 114, 1);
-          padding: 0 32px;
-          height: 58px;
-          gap: 10px;
-          font-family:
-            Lato,
-            -apple-system,
-            Roboto,
-            Helvetica,
-            sans-serif;
+          background-color: #205072;
+          padding: 0 24px;
+          height: 48px;
+          font-family: Lato, sans-serif;
           font-size: 16px;
-          color: rgba(241, 241, 241, 1);
+          color: #f1f1f1;
           font-weight: 400;
           white-space: nowrap;
-          line-height: 1.6;
           border: none;
           cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        }
+
+        .search-button:hover {
+          background-color: #163a54;
         }
 
         @media (max-width: 991px) {
           .search-button {
             padding: 16px 20px;
-            white-space: initial;
+            width: 100%;
           }
         }
       `}</style>

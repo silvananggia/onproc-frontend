@@ -95,7 +95,7 @@ function FAQSection() {
                 kementerian/lembaga, pengusaha maupun akademisi yang memerlukan
                 data dan informasi spesifik serta modul pengolahan data
                 penginderaan jauh.{" "}
-                <a href="#" className="link-text">
+                <a href="/tentang" className="link-text">
                   Pelajari seputar jenis pengguna
                 </a>
                 .
@@ -134,7 +134,7 @@ function FAQSection() {
               <p className="answer-text">
                 Untuk saat ini, permintaan data dan informasi penginderaan jauh
                 dapat dilakukan dengan menghubungi{" "}
-                <a href="#" className="link-text">
+                <a href="/kontak" className="link-text">
                   Pusat Data dan Informasi BRIN
                 </a>
                 . Akan tetapi, pihak Perguruan Tinggi dan Mahasiswa dapat
@@ -151,60 +151,46 @@ function FAQSection() {
           display: flex;
           flex-direction: column;
           align-items: center;
+          padding: var(--page-pad-y) var(--page-pad-x);
+          background: #fff;
         }
 
         .faq-container {
           width: 100%;
-          padding: 0 50px 50px 0;
+          max-width: 960px;
         }
 
         .faq-title {
-          align-self: center;
-          margin-top: 100px;
-          padding: 4px;
-          gap: 6px;
-          font-family: "Avenir LT Std", -apple-system, Roboto, Helvetica,
-            sans-serif;
-          font-size: 32px;
-          color: #000;
+          margin: 0 0 16px;
+          font-family: var(--font-heading);
+          font-size: 28px;
+          color: var(--color-ink);
           font-weight: 700;
-          letter-spacing: 4px;
-          line-height: 48px;
+          letter-spacing: -0.02em;
+          text-align: center;
         }
 
         .faq-category {
           display: flex;
-          margin-top: 5px;
-          padding: 28px 88px 0;
+          margin-top: 0;
+          padding: 14px 0 0;
           flex-direction: column;
-          align-items: stretch;
-          font-family: Lato, -apple-system, Roboto, Helvetica, sans-serif;
-          font-size: 24px;
-          color: #202020;
-          font-weight: 500;
-          letter-spacing: 0px;
-          line-height: 32px;
-          justify-content: center;
         }
 
         .category-header {
           display: flex;
           align-items: center;
-          gap: 40px 100px;
           justify-content: space-between;
-          flex-wrap: wrap;
+          gap: 16px;
           cursor: pointer;
         }
 
         .category-title {
-          align-self: stretch;
-          margin: auto 0;
-          padding: 4px;
-          gap: 6px;
-          font-family: Lato, -apple-system, Roboto, Helvetica, sans-serif;
-          font-size: 24px;
-          font-weight: 500;
+          font-family: var(--font-heading);
+          font-size: 17px;
+          font-weight: 600;
           margin: 0;
+          color: var(--color-ink);
         }
 
         .dropdown-icon {
@@ -226,10 +212,8 @@ function FAQSection() {
 
         .faq-item {
           display: flex;
-          padding: 28px 128px 0;
+          padding: 8px 0 12px;
           flex-direction: column;
-          align-items: stretch;
-          justify-content: center;
         }
 
         .question-header {
@@ -279,13 +263,13 @@ function FAQSection() {
           flex: 1;
           flex-shrink: 1;
           flex-basis: 0%;
-          margin-top: 12px;
+          margin-top: 8px;
           width: 100%;
           font-family: Lato, -apple-system, Roboto, Helvetica, sans-serif;
-          font-size: 16px;
-          color: #7c7c7c;
+          font-size: 15px;
+          color: var(--color-muted);
           letter-spacing: 0px;
-          line-height: 32px;
+          line-height: 1.55;
         }
 
         .link-text {
@@ -313,13 +297,12 @@ function FAQSection() {
 
         @media (max-width: 991px) {
           .faq-title {
-            margin-top: 40px;
+            font-size: 22px;
+            margin-bottom: 12px;
           }
 
           .faq-category {
-            padding-left: 20px;
-            padding-right: 20px;
-            margin-top: 40px;
+            padding: 12px 0 0;
           }
 
           .category-header {
@@ -332,8 +315,8 @@ function FAQSection() {
 
           .faq-item {
             max-width: 100%;
-            padding-left: 20px;
-            padding-right: 20px;
+            padding-left: 0;
+            padding-right: 0;
           }
 
           .question-header {

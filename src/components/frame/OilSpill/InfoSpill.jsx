@@ -1,13 +1,13 @@
 import React from "react";
 import Header from "../../layouts/Header";
-import ZPPIMap from "./ZPPIMap";
+import OilSpillMap from "./OilSpillMap";
 
-function InfoZPPI() {
+function InfoSpill() {
   return (
     <main className="info-page">
       <Header />
       <div className="info-map-area">
-        <ZPPIMap />
+        <OilSpillMap />
       </div>
       <style jsx>{`
         .info-page {
@@ -28,4 +28,4 @@ function InfoZPPI() {
   );
 }
 
-export default InfoZPPI;
+export default InfoSpill;

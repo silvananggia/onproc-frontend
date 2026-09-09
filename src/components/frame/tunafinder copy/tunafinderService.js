@@ -57,6 +57,11 @@ export const getHSITileUrl = ({ date = '20251119', spesies = 'ALB' }) => {
   });
 
   const fullUrl = `${baseUrl}?${params.toString()}`;
+
+  // Debug logging - remove in production if needed
+  console.log('HSI Tile URL:', fullUrl);
+  console.log('HSI Parameters:', { date, spesies: primarySpesies, band: bandMap[primarySpesies] || '1', s3Path });
+
   return fullUrl;
 };
 

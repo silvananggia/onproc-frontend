@@ -2,11 +2,9 @@ import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Loading from "../components/layouts/loading";
 
-// Use lazy for importing your components
 const Login = lazy(() => import('../components/auth/Login'));
 const Register = lazy(() => import('../components/auth/Register'));
 const Map = lazy(() => import('../components/home/Home'));
-const MapComponent = lazy(() => import('../components/map/MapComponent'));
 
 const LandingPage = lazy(() => import('../components/landingPage/LandingPage'));
 const Kontak = lazy(() => import('../components/contact/Kontak'));
@@ -19,6 +17,7 @@ const InfoHotspot = lazy(() => import('../components/frame/hotspot/InfoHotspot')
 const InfoDevegetasi = lazy(() => import('../components/frame/InfoDevegetasi'));
 const InfoFasePadi = lazy(() => import('../components/frame/InfoFasePadi'));
 const InfoZPPI = lazy(() => import('../components/frame/ZPPI/InfoZPPI'));
+const InfoSpill = lazy(() => import('../components/frame/OilSpill/InfoSpill'));
 const InfoTunafinder = lazy(() => import('../components/frame/tunafinder/InfoTunafinder'));
 const InfoRawanSawah = lazy(() => import('../components/frame/RawanSawah/InfoRawanSawah'));
 const InfoDeforestasi = lazy(() => import('../components/frame/deforestasi/Maps'));
@@ -120,6 +119,11 @@ function MyRouter() {
             <Route path='/info-zppi' element={
                 <Suspense fallback={<Loading />}>
                     <InfoZPPI />
+                </Suspense>
+            } />
+            <Route path='/info-spill' element={
+                <Suspense fallback={<Loading />}>
+                    <InfoSpill />
                 </Suspense>
             } />
             <Route path='/info-tunafinder' element={

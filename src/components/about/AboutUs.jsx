@@ -12,16 +12,18 @@ function AboutUsPage() {
   return (
     <div className="about-page">
       <Header />
-      <Breadcrumb
-        items={[
-          { label: "Home", url: "/" },
-          {
-            label: "Tentang Kami",
-            url: "/tentang",
-            active: true,
-          },
-        ]}
-      />
+      <div className="page-chrome">
+        <Breadcrumb
+          items={[
+            { label: "Home", url: "/" },
+            {
+              label: "Tentang Kami",
+              url: "/tentang",
+              active: true,
+            },
+          ]}
+        />
+      </div>
       <main className="main-content">
         <IntroSection />
         <ProgramSection />
@@ -30,22 +32,19 @@ function AboutUsPage() {
       </main>
       <Footer />
       <style jsx>{`
+        .page-chrome {
+          padding: 0 var(--page-pad-x);
+        }
 
         .main-content {
-         
           display: flex;
           flex-direction: column;
-          align-items: center;
-          gap: 72px;
+          gap: 16px;
+          padding: 0 0 var(--page-pad-y);
         }
         @media (max-width: 991px) {
           .main-content {
-            padding: 20px;
-          }
-        }
-        @media (max-width: 640px) {
-          .main-content {
-            padding: 16px;
+            gap: 20px;
           }
         }
       `}</style>

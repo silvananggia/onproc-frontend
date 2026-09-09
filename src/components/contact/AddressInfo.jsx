@@ -42,30 +42,30 @@ function AddressInfo() {
 
       <style jsx>{`
         .address-section {
-          margin: 72px 40px;
+          margin: 24px var(--page-pad-x);
         }
         @media (max-width: 991px) {
           .address-section {
-            margin-top: 40px;
+            margin-top: 20px;
           }
         }
         .address-title {
           color: #202020;
-          font-family: "Avenir LT Std", sans-serif;
-          font-size: 40px;
-          font-weight: 600;
-          line-height: 48px;
-          letter-spacing: 4px;
+          font-family: var(--font-heading);
+          font-size: 28px;
+          font-weight: 700;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
           margin: 0;
         }
         .organization-title {
           color: #202020;
-          font-family: "Avenir LT Std", sans-serif;
-          font-size: 28px;
+          font-family: var(--font-heading);
+          font-size: 18px;
           font-weight: 600;
-          line-height: 40px;
-          letter-spacing: 4px;
-          margin-top: 32px;
+          line-height: 1.4;
+          letter-spacing: 0.04em;
+          margin-top: 12px;
           margin-bottom: 0;
         }
         @media (max-width: 991px) {
@@ -120,23 +120,23 @@ function AddressInfo() {
           flex-direction: column;
           align-items: stretch;
           font-family: Lato, sans-serif;
-          font-size: 24px;
+          font-size: 16px;
           font-weight: 500;
           letter-spacing: 0px;
-          line-height: 32px;
+          line-height: 1.5;
         }
         @media (max-width: 991px) {
           .address-content {
             max-width: 100%;
-            margin-top: 40px;
+            margin-top: 16px;
           }
         }
         .office-title {
           color: #81883a;
           align-self: start;
           margin: 0;
-          font-size: 24px;
-          font-weight: 500;
+          font-size: 16px;
+          font-weight: 600;
         }
         .office-address {
           color: #202020;

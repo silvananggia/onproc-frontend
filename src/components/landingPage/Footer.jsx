@@ -4,19 +4,6 @@ import React from "react";
 
 
 function Footer() {
-  const footerLinks = [
-    "Daftar GEOMIMO",
-    "Kontak",
-    "Katalog GEOMIMO",
-    "Modul Katalog",
-    "Data Inderaja",
-    "Pernyataan Penafian",
-    "Tentang Kami",
-    "Badan Riset dan Inovasi Nasional (BRIN)",
-    "Organisasi Riset Elektronika dan Informatika (OREI)",
-    "Pusat Riset Geoinformatika (PRGI)",
-  ];
-
   return (
     <footer className="footer">
           <div className="footer-container">
@@ -26,24 +13,24 @@ function Footer() {
                   <div className="footer-logo"></div>
                 </div>
                 <div className="social-links">
-                  <a href="#" aria-label="Social media link">
+                  <a href="https://www.youtube.com/@brinindonesia" target="_blank" rel="noopener noreferrer" aria-label="YouTube BRIN">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/ce0454a415e8afd2583561c002798923bfc3269e?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e"
-                      alt="Social media icon"
+                      alt=""
                       className="social-icon"
                     />
                   </a>
-                  <a href="#" aria-label="Social media link">
+                  <a href="https://www.instagram.com/brin_indonesia" target="_blank" rel="noopener noreferrer" aria-label="Instagram BRIN">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/f9e638389420ecce69e573f715c8c8bb9cd33ba1?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e"
-                      alt="Social media icon"
+                      alt=""
                       className="social-icon"
                     />
                   </a>
-                  <a href="#" aria-label="Social media link">
+                  <a href="https://x.com/brin_indonesia" target="_blank" rel="noopener noreferrer" aria-label="X BRIN">
                     <img
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/2abae9326e7082350e1e3c20c7a12e850b7538d8?placeholderIfAbsent=true&apiKey=c794d0341bde47ac8d2a26f34a39214e"
-                      alt="Social media icon"
+                      alt=""
                       className="social-icon"
                     />
                   </a>
@@ -52,6 +39,9 @@ function Footer() {
               <nav className="footer-navigation">
                 <div className="footer-nav-column">
                   <h3 className="footer-nav-title">Daftar GEOMIMO</h3>
+                  <a href="/register" className="footer-link">
+                    Daftar
+                  </a>
                   <a href="/kontak" className="footer-link">
                     Kontak
                   </a>
@@ -94,7 +84,7 @@ function Footer() {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          padding: 64px 40px;
+          padding: var(--page-pad-y) var(--page-pad-x);
           color: #f1f1f1;
           background-color: #202020;
         }
@@ -115,7 +105,7 @@ function Footer() {
         @media (max-width: 991px) {
           .footer-container {
             max-width: 100%;
-            padding: 71px 20px;
+            padding: 0;
           }
         }
         .footer-content {
@@ -143,7 +133,7 @@ function Footer() {
           align-self: stretch;
           display: flex;
           margin: auto 0;
-          padding: 23px 45px;
+          padding: 0;
           flex-direction: column;
           align-items: stretch;
           font-family:
@@ -160,7 +150,7 @@ function Footer() {
         }
         @media (max-width: 991px) {
           .footer-logo-container {
-            padding: 23px 20px;
+            padding: 0;
           }
         }
         .footer-logo {
@@ -188,7 +178,7 @@ function Footer() {
         }
         .footer-navigation {
           display: flex;
-          margin-top: 68px;
+          margin-top: 28px;
           width: 100%;
           align-items: flex-start;
           color: #f1f1f1;
@@ -198,7 +188,7 @@ function Footer() {
         @media (max-width: 991px) {
           .footer-navigation {
             max-width: 100%;
-            margin-top: 40px;
+            margin-top: 20px;
           }
         }
         .footer-nav-column {
@@ -211,9 +201,9 @@ function Footer() {
             Roboto,
             Helvetica,
             sans-serif;
-          font-size: 20px;
+          font-size: 16px;
           font-weight: 600;
-          letter-spacing: 4px;
+          letter-spacing: 0;
           justify-content: flex-start;
           flex-grow: 1;
           flex-shrink: 1;
@@ -225,12 +215,12 @@ function Footer() {
           padding: 4px;
           gap: 6px;
           margin: 0;
-          font-size: 20px;
+          font-size: 15px;
           font-weight: 600;
         }
         .footer-link {
           align-self: flex-start;
-          margin-top: 16px;
+          margin-top: 8px;
           padding: 4px;
           gap: 6px;
           white-space: nowrap;

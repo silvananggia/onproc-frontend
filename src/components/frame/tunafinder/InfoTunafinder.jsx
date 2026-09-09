@@ -6,15 +6,22 @@ function InfoTunafinder() {
   return (
     <main className="info-page">
       <Header />
-      <TunafinderMap />
+      <div className="info-map-area">
+        <TunafinderMap />
+      </div>
       <style jsx>{`
         .info-page {
           background-color: #ffffff;
+          display: flex;
           flex-direction: column;
           overflow: hidden;
-          align-items: center;
           width: 100%;
           height: 100vh;
+        }
+        .info-map-area {
+          flex: 1;
+          min-height: 0;
+          width: 100%;
         }
       `}</style>
     </main>

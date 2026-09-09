@@ -31,14 +31,15 @@ function Breadcrumb({ items }) {
         .breadcrumb {
           align-self: flex-start;
           display: flex;
-          margin: 20px 40px 20px 20px;
+          margin: 8px 0;
           align-items: center;
+          font-family: var(--font-body);
         }
 
         .breadcrumb-list {
           display: flex;
           align-items: center;
-          gap: 32px;
+          gap: 10px;
           font-family: Lato, sans-serif;
           font-size: 16px;
           font-weight: 400;
@@ -77,8 +78,7 @@ function Breadcrumb({ items }) {
 
         @media (max-width: 991px) {
           .breadcrumb {
-            margin-left: 10px;
-            margin-top: 40px;
+            margin-top: 8px;
           }
         }
       `}</style>

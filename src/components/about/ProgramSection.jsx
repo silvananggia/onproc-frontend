@@ -28,55 +28,40 @@ function ProgramSection() {
         .program-section {
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
-          gap: 28px;
-          margin: 0 20px 0 20px;
+          gap: 16px;
+          padding: 0 var(--page-pad-x);
         }
 
         .program-title {
-          font-family: "Avenir LT Std", sans-serif;
-          font-size: 36px;
-          line-height: 48px;
-          font-weight: 600;
+          font-family: var(--font-heading);
+          font-size: 32px;
+          font-weight: 700;
           background: linear-gradient(90deg, #205072 0%, #32909c 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           margin: 0;
-          display: flex;
-          flex-direction: column;
         }
         .program-description {
-          font-family: "Lato", sans-serif;
-          font-size: 24px;
-          line-height: 32px;
-          font-weight: 500;
-          color: #202020;
+          font-family: var(--font-body);
+          font-size: 15px;
+          line-height: 1.55;
+          color: var(--color-ink);
           margin: 0;
+          max-width: 920px;
         }
         .program-links {
-          font-family: "Lato", sans-serif;
-          font-size: 24px;
-          line-height: 32px;
-          font-weight: 500;
-          color: #205072;
+          font-family: var(--font-body);
+          font-size: 15px;
+          line-height: 1.55;
+          color: var(--color-navy);
           margin: 0;
           display: flex;
           flex-wrap: wrap;
-          gap: 5px;
+          gap: 6px;
         }
         .program-link {
           color: #205072;
           text-decoration: underline;
-        }
-        @media (max-width: 991px) {
-          .program-section {
-            align-items: center;
-          }
-        }
-        @media (max-width: 640px) {
-          .program-section {
-            padding: 0 16px;
-          }
         }
       `}</style>
     </section>

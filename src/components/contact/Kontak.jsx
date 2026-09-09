@@ -12,16 +12,18 @@ function ProtoKontak() {
   return (
     <main className="proto-kontak">
       <Header />
-      <Breadcrumb
-        items={[
-          { label: "Home", url: "/" },
-          {
-            label: "Kontak",
-            url: "/kontak",
-            active: true,
-          },
-        ]}
-      />
+      <div className="page-chrome">
+        <Breadcrumb
+          items={[
+            { label: "Home", url: "/" },
+            {
+              label: "Kontak",
+              url: "/kontak",
+              active: true,
+            },
+          ]}
+        />
+      </div>
       <IntroSection />
       <ContactInfo />
       <AddressInfo />
@@ -29,6 +31,10 @@ function ProtoKontak() {
       <Footer />
 
       <style jsx>{`
+        .page-chrome {
+          padding: 0 var(--page-pad-x);
+        }
+
         .proto-kontak {
           background-color: rgba(255, 255, 255, 1);
           display: flex;

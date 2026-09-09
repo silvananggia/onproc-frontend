@@ -34,7 +34,6 @@ const Login = () => {
   const [validateCaptcha, setValidateCaptcha] = useState([]);
   const [loading, setLoading] = useState(false);
   const { message } = useSelector((state) => state.message);
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
   const errLogin = useSelector((state) => state.auth.error);
   const [captchaText, setCaptchaText] = useState("");
@@ -50,12 +49,9 @@ const Login = () => {
 
   useEffect(() => {
     if (user && user.role) {
-
       navigate("/katalog-modul");
-    } else {
-      navigate("/signin-app");
     }
-  }, [isAuthenticated, navigate]);
+  }, [user, navigate]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

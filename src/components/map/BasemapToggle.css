@@ -1,0 +1,67 @@
+.basemap-toggle {
+  position: absolute;
+  right: 16px;
+  bottom: 28px;
+  z-index: 1100;
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(32, 80, 114, 0.16);
+  font-family: var(--font-body, Lato, sans-serif);
+}
+
+.basemap-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 2px solid transparent;
+  background: #fff;
+  border-radius: 8px;
+  padding: 4px;
+  cursor: pointer;
+  min-width: 72px;
+  color: #205072;
+}
+
+.basemap-option img {
+  width: 72px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+.basemap-option span {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.basemap-option.active,
+.basemap-option:hover {
+  border-color: #205072;
+}
+
+.basemap-option.active {
+  background: #e8f1f6;
+}
+
+@media (max-width: 640px) {
+  .basemap-toggle {
+    right: 8px;
+    bottom: 16px;
+  }
+
+  .basemap-option {
+    min-width: 60px;
+  }
+
+  .basemap-option img {
+    width: 60px;
+    height: 40px;
+  }
+}

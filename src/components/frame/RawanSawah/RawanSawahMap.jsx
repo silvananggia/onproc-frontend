@@ -9,14 +9,18 @@ import Overlay from "ol/Overlay";
 import { toLonLat } from "ol/proj";
 import "ol/ol.css";
 import "./ZPPIMap.css";
+import BasemapToggle from "../../map/BasemapToggle";
 
-export default function ZppiMap() {
+export default function RawanSawahMap() {
   const [map, setMap] = useState(null);
   const currentLayerRef = useRef(null);
+  const [selectedSlug, setSelectedSlug] = useState(null);
   const [layersData, setLayersData] = useState([]);
+  const [layersLoading, setLayersLoading] = useState(true);
+  const [layersError, setLayersError] = useState("");
+  const [layerQuery, setLayerQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [totalPages, setTotalPages] = useState(1);
   const [popup, setPopup] = useState(null);
   const [legendUrl, setLegendUrl] = useState(null);
   const [activeSections, setActiveSections] = useState({
@@ -33,13 +37,30 @@ export default function ZppiMap() {
     maxY: 5.47982086834
   };
 
-  useEffect(() => {
+  const loadLayers = () => {
+    setLayersLoading(true);
+    setLayersError("");
     fetch("https://spbn.brin.go.id/public/getlayersfromcategory/135")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
-        setLayersData(data);
-        setTotalPages(Math.ceil(data.length / itemsPerPage));
+        setLayersData(Array.isArray(data) ? data : []);
+      })
+      .catch(() => {
+        setLayersError("Gagal memuat daftar layer. Periksa koneksi lalu coba lagi.");
+        setLayersData([]);
+      })
+      .finally(() => {
+        setLayersLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadLayers();
 
     const baseLayer = new TileLayer({
       title: "Basemap",
@@ -74,7 +95,7 @@ export default function ZppiMap() {
     });
 
     const olMap = new Map({
-      target: "map",
+      target: "rawansawah-map",
       layers: [baseLayer],
       overlays: [popupOverlay],
       view: new View({
@@ -105,7 +126,6 @@ export default function ZppiMap() {
         );
 
         if (url) {
-          console.log('Fetching feature info from:', url);
           fetch(url)
             .then(response => {
               if (!response.ok) {
@@ -114,7 +134,6 @@ export default function ZppiMap() {
               return response.json();
             })
             .then(data => {
-              console.log('Feature info response:', data);
               if (data.features && data.features.length > 0) {
                 const feature = data.features[0];
                 const properties = feature.properties;
@@ -131,20 +150,16 @@ export default function ZppiMap() {
                 popupContent.innerHTML = content;
                 popupOverlay.setPosition(evt.coordinate);
               } else {
-                console.log('No features found at clicked location');
                 popupOverlay.setPosition(undefined);
               }
             })
-            .catch(error => {
-              console.error('Error fetching feature info:', error);
+            .catch(() => {
               popupOverlay.setPosition(undefined);
             });
         } else {
-          console.log('No feature info URL generated');
           popupOverlay.setPosition(undefined);
         }
       } else {
-        console.log('No current layer selected');
         popupOverlay.setPosition(undefined);
       }
     });
@@ -169,6 +184,8 @@ export default function ZppiMap() {
   }, [layersData, map]);
 
   const handleLayerSelect = (slug, name) => {
+    if (!map || !slug) return;
+
     // Remove current layer if exists
     if (currentLayerRef.current) {
       map.removeLayer(currentLayerRef.current);
@@ -200,15 +217,23 @@ export default function ZppiMap() {
 
     map.addLayer(newLayer);
     currentLayerRef.current = newLayer;
+    setSelectedSlug(slug);
     
     // Update legend URL with style parameter
     const legendUrl = `https://spbn.brin.go.id/geoserver/lapan/wms?service=WMS&version=1.1.0&request=GetLegendGraphic&layer=lapan:${slug}&format=image/png`;
     setLegendUrl(legendUrl);
   };
 
-  const paginatedData = layersData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const filteredLayers = layersData.filter((item) => {
+    const query = layerQuery.trim().toLowerCase();
+    if (!query) return true;
+    return (item.name || "").toLowerCase().includes(query);
+  });
+  const totalPages = Math.max(1, Math.ceil(filteredLayers.length / itemsPerPage));
+  const safePage = Math.min(currentPage, totalPages);
+  const paginatedData = filteredLayers.slice(
+    (safePage - 1) * itemsPerPage,
+    safePage * itemsPerPage
   );
 
   const handlePageChange = (newPage) => {
@@ -233,17 +258,40 @@ export default function ZppiMap() {
         </div>
         
         <div className={`layer-list-content ${activeSections.layers ? '' : 'collapsed'}`}>
+          <input
+            type="search"
+            className="layer-search"
+            placeholder="Cari layer..."
+            value={layerQuery}
+            onChange={(event) => {
+              setLayerQuery(event.target.value);
+              setCurrentPage(1);
+            }}
+            aria-label="Cari layer rawan sawah"
+          />
+          {layersLoading && <div className="layer-status">Memuat daftar layer...</div>}
+          {layersError && (
+            <div className="layer-status error">
+              <p>{layersError}</p>
+              <button type="button" className="retry-button" onClick={loadLayers}>
+                Coba lagi
+              </button>
+            </div>
+          )}
+          {!layersLoading && !layersError && filteredLayers.length === 0 && (
+            <div className="layer-status">Tidak ada layer yang sesuai.</div>
+          )}
           <ul>
             {paginatedData.map((item) => (
               <li key={item.id}>
-                <label>
+                <label className={selectedSlug === item.slug ? "selected" : ""}>
                   <input
                     type="radio"
-                    name="layer"
+                    name="rawansawah-layer"
+                    checked={selectedSlug === item.slug}
                     onChange={() => handleLayerSelect(item.slug, item.name)}
-                    className="form-radio h-5 w-5 text-blue-600"
                   />
-                  <span className="text-gray-700">{item.name}</span>
+                  <span>{item.name}</span>
                 </label>
               </li>
             ))}
@@ -251,19 +299,19 @@ export default function ZppiMap() {
           
           <div className="pagination">
             <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              title="Previous page"
+              onClick={() => handlePageChange(safePage - 1)}
+              disabled={safePage === 1}
+              title="Halaman sebelumnya"
             >
               ←
             </button>
             <span>
-              {currentPage} / {totalPages}
+              {safePage} / {totalPages}
             </span>
             <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              title="Next page"
+              onClick={() => handlePageChange(safePage + 1)}
+              disabled={safePage === totalPages}
+              title="Halaman berikutnya"
             >
               →
             </button>
@@ -279,8 +327,7 @@ export default function ZppiMap() {
           </h3>
           <div className={`content ${activeSections.data ? 'active' : ''}`}>
             <ul className="list-disc">
-              <li>Data satelit Terra/Aqua MODIS (resolusi spasial 1000 meter x 1000 meter; sumber: Pusat Data dan Informasi - BRIN)</li>
-              <li>Data satelit SNPP VIIRS (resolusi spasial 750 meter x 750 meter; sumber: Pusat Data dan Informasi - BRIN)</li>
+              <li>Data satelit Terra-MODIS (resolusi spasial 250–1000 meter; sumber: Pusat Data dan Informasi - BRIN)</li>
             </ul>
           </div>
 
@@ -292,33 +339,28 @@ export default function ZppiMap() {
           </h3>
           <div className={`content ${activeSections.method ? 'active' : ''}`}>
             <ol className="list-decimal space-y-1">
-              <li>Pengolahan data Terra/Aqua MODIS dan SNPP VIIRS menjadi data suhu permukaan laut (SPL).</li>
-              <li>Kalibrasi dan reproyeksi (koreksi geometri) untuk mengatur posisi data satelit sesuai di bumi.</li>
-              <li>Destriping untuk memperhalus atau menghilangkan efek garis pada data SPL.</li>
-              <li>Deteksi termal front dengan metode SIED (ambang batas perbedaan suhu 0,5°C) dan hasil berupa vektor poligon.</li>
-              <li>Menghitung minimum bounding rectangle dari poligon.</li>
-              <li>Partisi area poligon untuk mempermudah penentuan titik pusat ZPPI.</li>
-              <li>Penentuan titik pusat (koordinat) untuk setiap partisi sebagai titik informasi ZPPI.</li>
-              <li>Informasi ZPPI disusun dalam peta dan tersedia dalam format pdf, kmz, shp, csv, jason, xml.</li>
-              <li>Pembagian area dalam 24 Project Area (PA) untuk efektivitas distribusi informasi.</li>
-              <li>Cakupan ZPPI berjarak 3,3 km dari titik, berlaku 2–3 hari ke depan.</li>
+              <li>Pengolahan citra Terra-MODIS untuk mengekstraksi indikator kebasahan dan kekeringan lahan sawah.</li>
+              <li>Kalibrasi dan koreksi geometri agar posisi data satelit sesuai dengan kondisi di lapangan.</li>
+              <li>Klasifikasi tingkat kerawanan banjir dan kekeringan berdasarkan karakteristik spektral dan temporal.</li>
+              <li>Pemetaan spasial sebaran kerawanan untuk mendukung peringatan dini dan pengelolaan lahan pertanian.</li>
             </ol>
           </div>
         </div>
       </div>
       <div className="map-wrapper">
-        <div id="map" className="map-container"></div>
+        <div id="rawansawah-map" className="map-container"></div>
+        {map && <BasemapToggle map={map} />}
         {legendUrl && (
           <div className="legend-box">
             <div className="legend-header">
-              <h4>Legend</h4>
+              <h4>Legenda</h4>
             </div>
             <div className="legend-content">
               <img 
                 src={legendUrl} 
                 alt="Legend" 
                 onError={(e) => {
-                  console.error('Failed to load legend image:', legendUrl);
+                  e.currentTarget.style.display = "none";
                 }}
               />
             </div>

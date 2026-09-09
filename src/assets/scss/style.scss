@@ -1,11 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,500;0,700;0,900;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
+
+:root {
+  --font-heading: "Plus Jakarta Sans", "Lato", sans-serif;
+  --font-body: "Lato", "Segoe UI", sans-serif;
+  --color-navy: #205072;
+  --color-teal: #32909c;
+  --color-mint: #32c596;
+  --color-olive: #81883a;
+  --color-ink: #202020;
+  --color-muted: #6b7280;
+  --color-bg: #f4f7f8;
+  --color-line: #e5e7eb;
+  --page-pad-x: 32px;
+  --page-pad-y: 40px;
+  --radius: 12px;
+  --shadow: 0 16px 40px rgba(32, 80, 114, 0.12);
+}
+
+@media (max-width: 991px) {
+  :root {
+    --page-pad-x: 16px;
+    --page-pad-y: 28px;
+  }
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: Arial, Cabin, Tahoma, Verdana, Helvetica Neue, sans-serif;
+  font-family: var(--font-body);
   font-style: normal;
+  color: var(--color-ink);
+  background: #fff;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+p {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+.page-main {
+  padding: 0 var(--page-pad-x) var(--page-pad-y);
+}
+
+.section-pad {
+  padding: var(--page-pad-y) var(--page-pad-x);
+}
+
+.container-wide {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .contentRoot {

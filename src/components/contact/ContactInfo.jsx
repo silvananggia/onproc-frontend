@@ -35,36 +35,35 @@ function ContactInfo() {
       <style jsx>{`
         .contact-section {
           display: flex;
-          margin-top: 88px;
+          margin-top: 24px;
           width: 100%;
-          padding: 0 40px;
+          padding: 0 var(--page-pad-x);
           flex-direction: column;
-          align-items: start;
         }
         @media (max-width: 991px) {
           .contact-section {
             max-width: 100%;
-            padding: 0 20px;
-            margin-top: 40px;
+            padding: 0 16px;
+            margin-top: 20px;
           }
         }
         .contact-title {
           color: #202020;
-          font-family: "Avenir LT Std", sans-serif;
-          font-size: 40px;
-          font-weight: 600;
-          line-height: 48px;
-          letter-spacing: 4px;
+          font-family: var(--font-heading);
+          font-size: 28px;
+          font-weight: 700;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
           margin: 0;
         }
         .contact-description {
           color: #202020;
           font-family: Lato, sans-serif;
-          font-size: 24px;
+          font-size: 16px;
           font-weight: 500;
-          line-height: 32px;
+          line-height: 1.55;
           letter-spacing: 0px;
-          margin-top: 32px;
+          margin-top: 8px;
           margin-bottom: 0;
         }
         @media (max-width: 991px) {
@@ -81,10 +80,10 @@ function ContactInfo() {
         }
         .contact-row {
           font-family: Lato, sans-serif;
-          font-size: 24px;
+          font-size: 16px;
           font-weight: 500;
           letter-spacing: 0px;
-          line-height: 32px;
+          line-height: 1.4;
         }
         .contact-label {
           background-color: rgba(241, 241, 241, 1);

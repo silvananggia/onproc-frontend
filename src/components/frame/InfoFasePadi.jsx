@@ -5,16 +5,17 @@ function InfoFasePadi() {
   return (
     <main className="info-page">
       <Header />
-      <iframe 
+      <iframe
         src="https://ee-dededirgahayu11.projects.earthengine.app/view/olahs1siscrop"
-        style={{ width: '100%', height: '100%', border: 'none' }}
+        title="Fase Pertumbuhan Padi"
+        style={{ width: "100%", height: "100%", border: "none", flex: 1, minHeight: 0 }}
       />
       <style jsx>{`
         .info-page {
           background-color: #ffffff;
+          display: flex;
           flex-direction: column;
           overflow: hidden;
-          align-items: center;
           width: 100%;
           height: 100vh;
         }

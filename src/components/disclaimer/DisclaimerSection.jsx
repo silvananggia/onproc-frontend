@@ -28,31 +28,30 @@ function DisclaimerSection({ id, title, content }) {
 
       <style jsx>{`
         .disclaimer-section {
-          margin-top: 30px;
+          margin-top: 20px;
           width: 100%;
-          padding: 0 40px;
-          margin-bottom: 30px;
-          
+          padding: 0 var(--page-pad-x);
+          margin-bottom: 16px;
         }
 
         .section-title {
           color: #205072;
-          font-family: "Avenir LT Std", sans-serif;
-          font-size: 32px;
-          font-weight: 600;
-          line-height: 36px;
-          letter-spacing: 4px;
+          font-family: var(--font-heading);
+          font-size: 22px;
+          font-weight: 700;
+          line-height: 1.25;
+          letter-spacing: -0.02em;
           margin: 0;
         }
 
         .section-content {
           color: #202020;
           font-family: Lato, sans-serif;
-          font-size: 16px;
+          font-size: 15px;
           font-weight: 500;
-          line-height: 32px;
+          line-height: 1.55;
           letter-spacing: 0px;
-          margin-top: 16px;
+          margin-top: 8px;
         }
 
         .content-paragraph {
@@ -66,7 +65,7 @@ function DisclaimerSection({ id, title, content }) {
         @media (max-width: 991px) {
           .disclaimer-section {
             max-width: 100%;
-            margin-top: 40px;
+            margin-top: 16px;
           }
 
           .section-title {

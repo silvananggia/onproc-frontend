@@ -6,14 +6,17 @@ import XYZ from "ol/source/XYZ";
 import ImageLayer from "ol/layer/Image";
 import ImageWMS from "ol/source/ImageWMS";
 import Overlay from "ol/Overlay";
-import { toLonLat } from "ol/proj";
+import GeoJSON from "ol/format/GeoJSON";
+import { transformExtent } from "ol/proj";
+import { createEmpty, extend, isEmpty } from "ol/extent";
 import "ol/ol.css";
-import "./ZPPIMap.css";
+import "./OilSpillMap.css";
 import BasemapToggle from "../../map/BasemapToggle";
 
-export default function ZppiMap() {
+export default function OilSpillMap() {
   const [map, setMap] = useState(null);
   const currentLayerRef = useRef(null);
+  const extentAbortRef = useRef(null);
   const [selectedSlug, setSelectedSlug] = useState(null);
   const [layersData, setLayersData] = useState([]);
   const [layersLoading, setLayersLoading] = useState(true);
@@ -40,7 +43,7 @@ export default function ZppiMap() {
   const loadLayers = () => {
     setLayersLoading(true);
     setLayersError("");
-    fetch("https://spbn.brin.go.id/public/getlayersfromcategory/140")
+    fetch("https://spbn.brin.go.id/public/getlayersfromcategory/133")
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP ${res.status}`);
@@ -95,7 +98,7 @@ export default function ZppiMap() {
     });
 
     const olMap = new Map({
-      target: "zppi-map",
+      target: "oilspill-map",
       layers: [baseLayer],
       overlays: [popupOverlay],
       view: new View({
@@ -183,6 +186,107 @@ export default function ZppiMap() {
     }
   }, [layersData, map]);
 
+  const fitMapToLonLatExtent = (olMap, lonLatExtent, duration = 800) => {
+    if (!olMap || !lonLatExtent) return;
+    const view = olMap.getView();
+    const extent = transformExtent(
+      lonLatExtent,
+      "EPSG:4326",
+      view.getProjection()
+    );
+    view.fit(extent, {
+      padding: [80, 80, 80, 80],
+      duration,
+      maxZoom: 14,
+    });
+  };
+
+  const getRegionExtentFromName = (name = "") => {
+    const label = name.toLowerCase();
+    if (label.includes("kalimantan")) {
+      return [116.2, -1.8, 118.6, 1.2];
+    }
+    if (label.includes("riau")) {
+      return [103.2, 0.2, 109.2, 4.5];
+    }
+    return [
+      indonesiaBbox.minX,
+      indonesiaBbox.minY,
+      indonesiaBbox.maxX,
+      indonesiaBbox.maxY,
+    ];
+  };
+
+  const extentFromGeoJson = (data, mapProjection) => {
+    if (Array.isArray(data?.bbox) && data.bbox.length >= 4) {
+      return transformExtent(data.bbox.slice(0, 4), "EPSG:4326", mapProjection);
+    }
+    if (!data?.features?.length) return null;
+
+    const features = new GeoJSON().readFeatures(data, {
+      dataProjection: "EPSG:4326",
+      featureProjection: mapProjection,
+    });
+    const extent = createEmpty();
+    features.forEach((feature) => {
+      const geometry = feature.getGeometry();
+      if (geometry) {
+        extend(extent, geometry.getExtent());
+      }
+    });
+    return isEmpty(extent) ? null : extent;
+  };
+
+  const zoomToLayerExtent = (slug, name, olMap) => {
+    if (!slug || !olMap) return;
+
+    if (extentAbortRef.current) {
+      extentAbortRef.current.abort();
+    }
+    const controller = new AbortController();
+    extentAbortRef.current = controller;
+
+    fitMapToLonLatExtent(olMap, getRegionExtentFromName(name), 600);
+
+    const wfsUrl =
+      "https://spbn.brin.go.id/geoserver/lapan/ows?" +
+      new URLSearchParams({
+        service: "WFS",
+        version: "1.0.0",
+        request: "GetFeature",
+        typeName: `lapan:${slug}`,
+        outputFormat: "application/json",
+        srsName: "EPSG:4326",
+        maxFeatures: "200",
+      }).toString();
+
+    fetch(wfsUrl, { signal: controller.signal })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        const layerExtent = extentFromGeoJson(
+          data,
+          olMap.getView().getProjection()
+        );
+        if (layerExtent) {
+          olMap.getView().fit(layerExtent, {
+            padding: [80, 80, 80, 80],
+            duration: 800,
+            maxZoom: 14,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.error("Failed to zoom to oil spill feature extent:", err);
+        }
+      });
+  };
+
   const handleLayerSelect = (slug, name) => {
     if (!map || !slug) return;
 
@@ -199,7 +303,6 @@ export default function ZppiMap() {
         VERSION: '1.1.1',
         FORMAT: 'image/png',
         TRANSPARENT: true,
-        STYLES: 'zppi',
         EXCEPTIONS: 'application/vnd.ogc.se_inimage',
         SRS: 'EPSG:3857',
         FORMAT_OPTIONS: 'dpi:180'
@@ -218,10 +321,12 @@ export default function ZppiMap() {
     map.addLayer(newLayer);
     currentLayerRef.current = newLayer;
     setSelectedSlug(slug);
-    
+
     // Update legend URL
-    const legendUrl = `https://spbn.brin.go.id/geoserver/lapan/wms?service=WMS&version=1.1.0&request=GetLegendGraphic&layer=lapan:${slug}&format=image/png&style=zppi&legend_options=fontAntiAliasing:true;fontSize:12;fontName:Arial;dx:0.5;dy:0.5;forceLabels:on;`;
+    const legendUrl = `https://spbn.brin.go.id/geoserver/lapan/wms?service=WMS&version=1.1.0&request=GetLegendGraphic&layer=lapan:${slug}&format=image/png&legend_options=fontAntiAliasing:true;fontSize:12;fontName:Arial;dx:0.5;dy:0.5;forceLabels:on;`;
     setLegendUrl(legendUrl);
+
+    zoomToLayerExtent(slug, name, map);
   };
 
   const filteredLayers = layersData.filter((item) => {
@@ -248,13 +353,13 @@ export default function ZppiMap() {
   };
 
   return (
-    <div className="zppi-map-container">
+    <div className="oilspill-map-container">
       <div className="layer-list">
         <div 
           className={`layer-list-header ${activeSections.layers ? 'active' : ''}`}
           onClick={() => toggleSection('layers')}
         >
-          <h2>Zona Potensi Penangkapan Ikan</h2>
+          <h2>Tumpahan Minyak</h2>
         </div>
         
         <div className={`layer-list-content ${activeSections.layers ? '' : 'collapsed'}`}>
@@ -267,7 +372,7 @@ export default function ZppiMap() {
               setLayerQuery(event.target.value);
               setCurrentPage(1);
             }}
-            aria-label="Cari layer ZPPI"
+            aria-label="Cari layer tumpahan minyak"
           />
           {layersLoading && <div className="layer-status">Memuat daftar layer...</div>}
           {layersError && (
@@ -287,7 +392,7 @@ export default function ZppiMap() {
                 <label className={selectedSlug === item.slug ? "selected" : ""}>
                   <input
                     type="radio"
-                    name="zppi-layer"
+                    name="oilspill-layer"
                     checked={selectedSlug === item.slug}
                     onChange={() => handleLayerSelect(item.slug, item.name)}
                   />
@@ -327,8 +432,9 @@ export default function ZppiMap() {
           </h3>
           <div className={`content ${activeSections.data ? 'active' : ''}`}>
             <ul className="list-disc">
-              <li>Data satelit Terra/Aqua MODIS (resolusi spasial 1000 meter x 1000 meter; sumber: Pusat Data dan Informasi - BRIN)</li>
-              <li>Data satelit SNPP VIIRS (resolusi spasial 750 meter x 750 meter; sumber: Pusat Data dan Informasi - BRIN)</li>
+              <li>Data satelit Sentinel-1 (radar SAR; sumber: Pusat Data dan Informasi - BRIN)</li>
+              <li>Data satelit Sentinel-2 (optik; sumber: Pusat Data dan Informasi - BRIN)</li>
+              <li>Data satelit Landsat 8/9 (optik; sumber: Pusat Data dan Informasi - BRIN)</li>
             </ul>
           </div>
 
@@ -340,22 +446,16 @@ export default function ZppiMap() {
           </h3>
           <div className={`content ${activeSections.method ? 'active' : ''}`}>
             <ol className="list-decimal space-y-1">
-              <li>Pengolahan data Terra/Aqua MODIS dan SNPP VIIRS menjadi data suhu permukaan laut (SPL).</li>
+              <li>Pengolahan citra satelit radar (Sentinel-1) dan optik (Sentinel-2, Landsat 8/9) untuk deteksi tumpahan minyak di permukaan laut.</li>
               <li>Kalibrasi dan reproyeksi (koreksi geometri) untuk mengatur posisi data satelit sesuai di bumi.</li>
-              <li>Destriping untuk memperhalus atau menghilangkan efek garis pada data SPL.</li>
-              <li>Deteksi termal front dengan metode SIED (ambang batas perbedaan suhu 0,5°C) dan hasil berupa vektor poligon.</li>
-              <li>Menghitung minimum bounding rectangle dari poligon.</li>
-              <li>Partisi area poligon untuk mempermudah penentuan titik pusat ZPPI.</li>
-              <li>Penentuan titik pusat (koordinat) untuk setiap partisi sebagai titik informasi ZPPI.</li>
-              <li>Informasi ZPPI disusun dalam peta dan tersedia dalam format pdf, kmz, shp, csv, jason, xml.</li>
-              <li>Pembagian area dalam 24 Project Area (PA) untuk efektivitas distribusi informasi.</li>
-              <li>Cakupan ZPPI berjarak 3,3 km dari titik, berlaku 2–3 hari ke depan.</li>
+              <li>Identifikasi area terduga tumpahan minyak berdasarkan karakteristik hamburan balik radar dan spektral optik.</li>
+              <li>Pemetaan sebaran tumpahan minyak dalam format spasial untuk pemantauan dan tanggap darurat.</li>
             </ol>
           </div>
         </div>
       </div>
       <div className="map-wrapper">
-        <div id="zppi-map" className="map-container"></div>
+        <div id="oilspill-map" className="map-container"></div>
         {map && <BasemapToggle map={map} />}
         {legendUrl && (
           <div className="legend-box">
