@@ -1,0 +1,77 @@
+/* CogMap.css */
+
+.cog-map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.cog-map-container .map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.cog-map-container .ol-zoom-in,
+.cog-map-container .ol-zoom-out {
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.cog-map-container .ol-zoom-in:hover,
+.cog-map-container .ol-zoom-out:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.cog-map-container .ol-attribution {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.cog-legend-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.cog-legend-gradient {
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #313695 0%, #74add1 35%, #ffffbf 50%, #f46d43 75%, #a50026 100%);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .cog-map-container .map-container {
+    height: 100%;
+  }
+}
+
+.cog-map-container ::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cog-map-container ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.cog-map-container ::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}

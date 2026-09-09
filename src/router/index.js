@@ -15,10 +15,10 @@ const ModulCatalog = lazy(() => import('../components/modulCatalog/ModulCatalog'
 //const InfoHotspot = lazy(() => import('../components/frame/InfoHotspot'));
 const InfoHotspot = lazy(() => import('../components/frame/hotspot/InfoHotspot'));
 const InfoDevegetasi = lazy(() => import('../components/frame/InfoDevegetasi'));
-const InfoFasePadi = lazy(() => import('../components/frame/InfoFasePadi'));
 const InfoZPPI = lazy(() => import('../components/frame/ZPPI/InfoZPPI'));
 const InfoSpill = lazy(() => import('../components/frame/OilSpill/InfoSpill'));
 const InfoTunafinder = lazy(() => import('../components/frame/tunafinder/InfoTunafinder'));
+const InfoRasterPage = lazy(() => import('../components/frame/cog/InfoRasterPage'));
 const InfoRawanSawah = lazy(() => import('../components/frame/RawanSawah/InfoRawanSawah'));
 const InfoDeforestasi = lazy(() => import('../components/frame/deforestasi/Maps'));
 const MapWorkspace = lazy(() => import('../components/mapWorkspace/MapWorkspace'));
@@ -96,7 +96,22 @@ function MyRouter() {
 
             <Route path='/info-fase-padi' element={
                 <Suspense fallback={<Loading />}>
-                    <InfoFasePadi />
+                    <InfoRasterPage productId="fasepadi" />
+                </Suspense>
+            } />
+            <Route path='/info-ch4' element={
+                <Suspense fallback={<Loading />}>
+                    <InfoRasterPage productId="ch4" />
+                </Suspense>
+            } />
+            <Route path='/info-mangrove' element={
+                <Suspense fallback={<Loading />}>
+                    <InfoRasterPage productId="mangrove" />
+                </Suspense>
+            } />
+            <Route path='/info-landsubsidence' element={
+                <Suspense fallback={<Loading />}>
+                    <InfoRasterPage productId="landsubsidence" />
                 </Suspense>
             } />
 

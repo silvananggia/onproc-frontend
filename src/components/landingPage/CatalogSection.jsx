@@ -26,6 +26,18 @@ const featuredModules = [
     description: "Analisis habitat dan potensi penangkapan tuna berbasis HSI.",
     tag: "Perikanan",
   },
+  {
+    title: "Penurunan Muka Tanah",
+    url: "/info-landsubsidence",
+    description: "Pantau land subsidence Jawa dan Jakarta berbasis InSAR.",
+    tag: "Kebencanaan",
+  },
+  {
+    title: "Emisi CO2 dan CH4",
+    url: "/info-ch4",
+    description: "Klasifikasi emisi gas rumah kaca dari data penginderaan jauh.",
+    tag: "Lingkungan",
+  },
 ];
 
 function CatalogSection() {

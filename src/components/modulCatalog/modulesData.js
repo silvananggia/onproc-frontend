@@ -150,18 +150,54 @@ export function getCatalogModules(user) {
     //   requiresLogin: false,
     //   iconUrl: HOTSPOT_ICON,
     // },
-    // {
-    //   id: 12,
-    //   title: "Fase Pertumbuhan Padi",
-    //   url: "/info-fase-padi",
-    //   description:
-    //     "Informasi fase pertumbuhan padi berdasarkan pengolahan data satelit Sentinel-1 untuk mendukung pemantauan musim tanam dan produktivitas lahan sawah.",
-    //   datasets: "Sentinel-1",
-    //   datasetTags: ["Sentinel-1"],
-    //   category: "pertanian",
-    //   requiresLogin: false,
-    //   iconUrl: SATELLITE_ICON,
-    // },
+    {
+      id: 10,
+      title: "Emisi CO2 dan CH4",
+      url: "/info-ch4",
+      description:
+        "Peta klasifikasi emisi karbon dioksida (ODIAC) untuk Indonesia dan emisi metana dari lahan sawah Jawa-Bali. Pengguna dapat memilih jenis informasi dan tahun pengamatan.",
+      datasets: "ODIAC, Sentinel-2",
+      datasetTags: ["Sentinel-2", "ODIAC"],
+      category: "lingkungan",
+      requiresLogin: false,
+      iconUrl: DATASET_ICON,
+    },
+    {
+      id: 11,
+      title: "Alert Deforestasi Mangrove",
+      url: "/info-mangrove",
+      description:
+        "Informasi alert deforestasi mangrove pada enam lokasi prioritas: Cilacap, Indramayu, Maros, Pekalongan, Semarang, dan Teluk Benoa, dengan pembaruan semesteran.",
+      datasets: "Sentinel-2, Landsat 8/9",
+      datasetTags: ["Sentinel-2", "Landsat 8/9"],
+      category: "kehutanan",
+      requiresLogin: false,
+      iconUrl: HOTSPOT_ICON,
+    },
+    {
+      id: 12,
+      title: "Penurunan Muka Tanah",
+      url: "/info-landsubsidence",
+      description:
+        "Pemantauan penurunan muka tanah (land subsidence) di Jawa dan Jakarta berdasarkan analisis interferometri InSAR, termasuk displacement vertikal, Line of Sight, serta komponen quasi UD dan EW.",
+      datasets: "Sentinel-1, ALOS-2",
+      datasetTags: ["Sentinel-1"],
+      category: "kebencanaan",
+      requiresLogin: false,
+      iconUrl: DATASET_ICON,
+    },
+    {
+      id: 13,
+      title: "Fase Pertumbuhan Padi",
+      url: "/info-fase-padi",
+      description:
+        "Informasi fase dan umur padi berdasarkan pengolahan data satelit Sentinel-1 per dekade untuk mendukung pemantauan musim tanam dan produktivitas lahan sawah.",
+      datasets: "Sentinel-1",
+      datasetTags: ["Sentinel-1"],
+      category: "pertanian",
+      requiresLogin: false,
+      iconUrl: SATELLITE_ICON,
+    },
   ];
 }
 
