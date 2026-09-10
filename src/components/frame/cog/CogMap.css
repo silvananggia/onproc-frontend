@@ -179,7 +179,7 @@
 .cog-legend-gradient {
   height: 12px;
   border-radius: 4px;
-  background: linear-gradient(90deg, #313695 0%, #74add1 35%, #ffffbf 50%, #f46d43 75%, #a50026 100%);
+  background: linear-gradient(90deg, #a50026 0%, #f46d43 25%, #ffffbf 50%, #74add1 75%, #313695 100%);
   border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
